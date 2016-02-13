@@ -2,6 +2,8 @@
 ## Interface: 50400
 ## Title: PremadeHelper
 ## Version: 1.0
+Helpers\Api.lua
+Helpers\Core.lua
 Helpers\Common.lua
 Battlegrounds\AlteracValley.lua
 Battlegrounds\IslandOfConquest.lua

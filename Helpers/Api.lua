@@ -1,4 +1,6 @@
-print("API init")
+
+
+print("----API init----")
 
 Api = {};
 
@@ -10,30 +12,53 @@ function Api.NewFrame(...)
    return frame
 end
 
+function eventHandler(self, event, ...)
+	print("Calling: ".. event)
+    self[event](self, ...); 
+end
+
 function Api.Subscribe(self)
-   
-   local eventHandler = 
-   function(self, event, ...)
-      self[event](self, ...); 
-   end
-   
-   self:SetScript("OnEvent", eventHandler);
-   
-   for i = 1, select("#", self.Events) do
-      local eventName = select(i, self.Events);
-      print("Subscripting on " .. eventName)
-      self:RegisterEvent(eventName); 
-   end
-   print("Subscripting finished")
+	self:SetScript("OnEvent", eventHandler);
+	for f, t in pairs( self.Events ) do
+		local eventName = t
+		
+		self:RegisterEvent(eventName, self[eventName], true); 
+		if self:IsEventRegistered(eventName) then
+			print("+ Subscripting on " .. eventName)
+		else
+			print("- [Fail] Subscripting on " .. eventName)
+		end
+	end
+	print(".Subscripting finished")
 end
 
 function Api.Unsubscribe()
 end
 
-local test = Api.NewFrame(
-   "SPELL_CAST_SUCCESS",
-"PLAYER_LOGIN")
+local test = Api.NewFrame({ 
+	"PLAYER_LOGIN",
+	"SPELL_CAST_SUCCESS",
+	"CHAT_MSG_RAID_BOSS_EMOTE",
+	"PLAYER_ENTERING_WORLD",
+	"CHAT_MSG",
+	 })
 
+function test:CHAT_MSG(...)
+   print("CHAT_MSG")
+end
+
+function test:UNIT_SPELLCAST_SUCCESS(...)
+   print("UNIT_SPELLCAST_SUCCESS")
+end
+	 
+function test:PLAYER_ENTERING_WORLD(...)
+   print("PLAYER_ENTERING_WORLD")
+end
+	 
+function test:CHAT_MSG_RAID_BOSS_EMOTE(...)
+   print("CHAT_MSG_RAID_BOSS_EMOTE")
+end
+	 
 function test:SPELL_CAST_SUCCESS(...)
    print("SPELL_CAST_SUCCESS")
 end
@@ -42,5 +67,6 @@ function test:PLAYER_LOGIN(...)
    print("PLAYER_LOGIN")
 end
 
+
 test:Subscribe();
-test:Unsubscribe()
+--test:Unsubscribe()
