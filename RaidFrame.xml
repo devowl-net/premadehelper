@@ -1,0 +1,30 @@
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+	<Script file="RaidFrame.lua" />
+	<Frame name="RaidFrame" movable="true">
+		<Size x="377" y="397" />
+		<Anchors>
+			<Anchor point="TOPLEFT" x="465" y="-177" />
+		</Anchors>
+		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+			<BackgroundInsets>
+				<AbsInset left="11" right="12" top="12" bottom="11" />
+			</BackgroundInsets>
+			<TileSize val="32" />
+			<EdgeSize val="32" />
+		</Backdrop>
+		<Frames>
+			<Button name="bRefreshList" inherits="UIPanelSquareButton" parent="" text="Обновить">
+				<Size x="117" y="36" />
+				<Anchors>
+					<Anchor point="TOPLEFT" x="135" y="-321" />
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						bRefreshList_OnClick()
+					</OnClick>
+				</Scripts>
+				<ButtonText name="$parentText" text="Обновить" />
+			</Button>
+		</Frames>
+	</Frame>
+</Ui>

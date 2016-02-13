@@ -1,0 +1,11 @@
+## Author: Ярославль-СтражСмерти
+## Interface: 50400
+## Title: PremadeHelper
+## Version: 1.0
+Helpers\Common.lua
+Battlegrounds\AlteracValley.lua
+Battlegrounds\IslandOfConquest.lua
+Battlegrounds\Battlegrounds.lua
+embeds.xml
+PremadeHelper.lua
+GlobalSettings.lua
