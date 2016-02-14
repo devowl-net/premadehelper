@@ -15,22 +15,45 @@ function Api.NewFrame(workCallback, ...)
 	return frame
 end
 
-function eventHandler(self, eventName, timestamp, sourceEventName, ...)
+function eventHandler(self, eventName, ...)
+	if eventName == nil then return end
+
 	if self.WorkCallback ~= nil and self.WorkCallback() == false then 
 		-- проверяем обрабатываем или нет события в данный момент
 		return
 	end
 
-	if eventName == nil then return end
-
 	--print("[timestamp]".. __tostring(timestamp).." [eventName] "..__tostring(eventName).." [sourceEventName] "..__tostring(sourceEventName)..__UnpackToString(...))
-
 	if self.Events[eventName] then
-		print("[timestamp]".. __tostring(timestamp).." [eventName] "..__tostring(eventName).." 0) "..__tostring(sourceEventName)..__UnpackToString(...))
-		self[eventName](self, sourceEventName, ...); 
-	elseif self.Internal_Events[eventName] and self.Events[sourceEventName] then
-		self[sourceEventName](self, ...)
+		--print(" [eventName] "..__tostring(eventName).."[timestamp]".. __tostring(timestamp).." 0) "..__tostring(sourceEventName)..__UnpackToString(...))
+		FireEvent(self, eventName, ...)
+		--self[eventName](self, sourceEventName, ...); 
+	elseif self.Internal_Events[eventName] then
+		FireUnfilteredEvent(self, eventName, ...)
+		--self[sourceEventName](self, ...)
 	end
+end
+
+function FireUnfilteredEvent(self, eventName, param1, param2, ...)
+	-- Нефильтрованное
+	-- param1 - timestamp
+	-- param2 - Имя события
+	eventName = param2
+	
+	if self.Events[eventName] then
+		--print("Calling Unfiltered: " .. eventName)
+		self[eventName](self, ...)
+	end
+	
+end
+
+function FireEvent(self, eventName, ...)
+	-- Обычное событие
+	self[eventName](self, ...)
+end
+
+function IsUnfiltered(eventName)
+	return not eventName == nil and string.find(eventName, "UNFILTERED") ~= nil
 end
 
 -- Подписка
@@ -88,7 +111,23 @@ function __tostring(obj)
 	end
 end
 
+function __merge(str1, str2, str3)
+-- TODO на ... сделать
+	local result = ""
+	if str1 ~= nil then
+		result = __tostring(str1) 
+	end
 
+	if str2 ~= nil then
+		result = result .. " " .. __tostring(str2)
+	end
+	
+	if str3 ~= nil then
+		result = result .. " " .. __tostring(str3)
+	end
+
+	return result
+end
 
 
 

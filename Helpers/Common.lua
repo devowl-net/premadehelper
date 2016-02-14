@@ -8,3 +8,12 @@ function Common:IsInsidePvpZone()
 	end
 	return false;
 end
+
+function Common:FormatInstanceMessage(message)
+	-- [PH] Test
+	local result = __merge("[PH]", message)
+
+	-- {крест} [PH] Test {крест}
+	return __merge(_L.Marks["circle"], result, _L.Marks["circle"])
+end
+

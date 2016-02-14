@@ -1,13 +1,12 @@
-print("AV MODULE LOAD")
+ï»¿print("AV MODULE LOAD")
 
-local AV = {}
-local Vandar = "Âàíäàð Ãðîçîâàÿ Âåðøèíà"
-local Drektar = "Äðåê'Òàð"
+local AV = nil
+
 
 -- http://wow.gamepedia.com/MapID
 local TargetMapId = 401;
 
--- oQueue ïåðåìåííûå
+-- oQueue Ð¿ÐµÑ€ÐµÐ¼ÐµÐ½Ð½Ñ‹Ðµ
 local _next_flag_check = 0 ;
 local _instance_faction = nil
 local scoreboard = {};
@@ -15,130 +14,87 @@ local _flags = nil ;
 local _enemy = nil ;
 local bgzone = false
 
-BG_STAT_COLUMN = { [ "Áàçà àòàêîâàíà"        ] = "Áàçà àòàêîâàíà",
-                   [ "Áàçà çàùèùåíà"         ] = "Áàçà çàùèùåíà",
-                   [ "Ðàçðóøèòåëü óíè÷òîæåí" ] = "Ðàçðóøèòåëü óíè÷òîæåí",
-                   [ "Ôëàã çàõâà÷åí"         ] = "Ôëàã çàõâà÷åí",
-                   [ "Ôëàã âîçâðàùåí"        ] = "Ôëàã âîçâðàùåí",
-                   [ "Âðàò ðàçðóøåíû"        ] = "Âðàòà ðàçðóøåíû",
-                   [ "Êëàäáèùå àòàêîâàíî"    ] = "Êëàäáèùå àòàêîâàíî",
-                   [ "Êëàäáèùå çàùèùåíî"     ] = "Êëàäáèùå çàùèùåíî",
-                   [ "Áàøíÿ àòàêîâàíû"       ] = "Áàøíÿ àòàêîâàíà",
-                   [ "Áàøíÿ çàùèùåíà"        ] = "Áàøíÿ çàùèùåíà",
-} ;
+do
+	AV = Api.NewFrame(function()
+		--return Common.IsInsidePvpZone() and GetCurrentMapAreaID() == TargetMapId
+		return GetCurrentMapAreaID() == TargetMapId
+	end,
+	{
+		"CHAT_MSG_MONSTER_YELL",
+		--"SPELL_CAST_SUCCESS"
+	})
 
---BG_STAT_COLUMN = { [ "Bases Assaulted"       ] = "Base Assaulted",
---                      [ "Bases Defended"        ] = "Base Defended",
---                      [ "Demolishers Destroyed" ] = "Demolisher Destroyed",
---                      [ "Flag Captures"         ] = "Flag Captured",
---                      [ "Flag Returns"          ] = "Flag Returned",
---                      [ "Gates Destroyed"       ] = "Gate Destroyed",
---                      [ "Graveyards Assaulted"  ] = "Graveyard Assaulted",
---                      [ "Graveyards Defended"   ] = "Graveyard Defended",
---                      [ "Towers Assaulted"      ] = "Tower Assaulted",
---                      [ "Towers Defended"       ] = "Tower Defended",
---} ;
-
-
-
-
-function AV:PLAYER_ENTERING_WORLD(...)
- -- handle PLAYER_ENTERING_WORLD here
-end
-function AV:PLAYER_LEAVING_WORLD(...)
- -- handle PLAYER_LEAVING_WORLD here
-end
-
-function AV:ZONE_CHANGED_NEW_AREA()
-	BattlegroundEnterOrLeave()
-	--print("ZONE_CHANGED_NEW_AREA "..tostring(bgzone))
-end
-function AV:PLAYER_LOGIN()
-	BattlegroundEnterOrLeave()
-	--print("PLAYER_LOGIN "..tostring(bgzone))
-end
-
-function AV:PLAYER_ENTERING_WORLD()
-	BattlegroundEnterOrLeave()
-	--print("PLAYER_ENTERING_WORLD "..tostring(bgzone))
-end
-function AV:PLAYER_LEAVING_WORLD()
-	BattlegroundEnterOrLeave()
-end
-
-
-function BattlegroundEnterOrLeave()
-	if (Common.IsInsidePvpZone())  then
-		local currentZone = GetCurrentMapAreaID()
-		if not bgzone and currentZone == TargetMapId then
-			frame:RegisterEvent("SPELL_CAST_SUCCESS")
-			scoreboard = {};
-			print("++ANY++ Alterac Valley helper activated")
-			_next_flag_check = time()
-			bgzone = true
-		else
-			print("Alterac Valley OFF")
-			frame:UnregisterEvent("SPELL_CAST_SUCCESS")
-			bgzone = false
-		end
-	end
-end
-
-function AV:CHAT_MSG_BG_SYSTEM_HORDE()
-	if not bgzone then return end
-
-	flag_watcher()
-end
-function AV:CHAT_MSG_BG_SYSTEM_ALLIANCE()
-	if not bgzone then return end
-
-	flag_watcher()
+	AV:Subscribe()
 end
 
 function AV:CHAT_MSG_MONSTER_YELL(message, sender)
-	print(sender .. "        " .. message)
 	if message == nil or sender == nil then return end
 	
-	if sender == Drektar then 
-		print("ÄÐÅÊÒÀÐÀ ÀÒÀÊÓÞÒ")
-		print("ÄÐÅÊÒÀÐÀ ÀÒÀÊÓÞÒ")
-		print("ÄÐÅÊÒÀÐÀ ÀÒÀÊÓÞÒ")
-		print("ÄÐÅÊÒÀÐÀ ÀÒÀÊÓÞÒ")
-	elseif sender == Vandar then
-		print("ÂÀÍÄÀÐÀÀ ÀÒÀÊÓÞÒ")
-		print("ÂÀÍÄÀÐÀÀ ÀÒÀÊÓÞÒ")
-		print("ÂÀÍÄÀÐÀÀ ÀÒÀÊÓÞÒ")
-		print("ÂÀÍÄÀÐÀÀ ÀÒÀÊÓÞÒ")
+	local underAttackMessage = nil
+	if sender == _L["Drektar"] then 
+		underAttackMessage = __merge(_L["Drektar"], _L["UnderAttack"])
+	elseif sender == _L["Vandar"] then
+		underAttackMessage = __merge(_L["Vandar"], _L["UnderAttack"])
 	end
+
+	if underAttackMessage ~= nil then
+		local message = Common:FormatInstanceMessage(underAttackMessage)
+		--print(message)
+		SendChatMessage(message, "INSTANCE_CHAT" )
+	end
+end
+
+function BattlegroundEnterOrLeave()
+	--if (Common.IsInsidePvpZone())  then
+	--	local currentZone = GetCurrentMapAreaID()
+	--	if not bgzone and currentZone == TargetMapId then
+	--		frame:RegisterEvent("SPELL_CAST_SUCCESS")
+	--		scoreboard = {};
+	--		print("++ANY++ Alterac Valley helper activated")
+	--		_next_flag_check = time()
+	--		bgzone = true
+	--	else
+	--		print("Alterac Valley OFF")
+	--		frame:UnregisterEvent("SPELL_CAST_SUCCESS")
+	--		bgzone = false
+	--	end
+	--end
+end
+
+--function AV:CHAT_MSG_BG_SYSTEM_HORDE()
+--	flag_watcher()
+--end
+--function AV:CHAT_MSG_BG_SYSTEM_ALLIANCE()
+--	flag_watcher()
+--end
+
+
+
+function AV:SPELL_CAST_SUCCESS(...)
+   print("SPELL_CAST_SUCCESS")
 end
 
 function AV:UPDATE_BATTLEFIELD_SCORE()
 	flag_watcher()
 end
 
-local OQPacket = {};
-function new() 
-  local o = {} ;
-  o._vars = {} ; 
-  o._source = nil ;
-  o._sender = nil ;
-  o._pkt    = nil ;
-  setmetatable(o, { __index = OQPacket }) ;
-  return o ;
-end
+--local OQPacket = {};
+--function new() 
+--  local o = {} ;
+--  o._vars = {} ; 
+--  o._source = nil ;
+--  o._sender = nil ;
+--  o._pkt    = nil ;
+--  setmetatable(o, { __index = OQPacket }) ;
+--  return o ;
+--end
 
 
 
--- ÎÁÍÎÂËßÅÒ ÒÎËÜÊÎ ÊÎÃÄÀ ÑÒÀÒÈÑÒÈÊÀ ÎÒÐÛÒÀ
+-- ÐžÐ‘ÐÐžÐ’Ð›Ð¯Ð•Ð¢ Ð¢ÐžÐ›Ð¬ÐšÐž ÐšÐžÐ“Ð”Ð Ð¡Ð¢ÐÐ¢Ð˜Ð¡Ð¢Ð˜ÐšÐ ÐžÐ¢Ð Ð«Ð¢Ð
 function flag_watcher()
-
-
-	--if not bgzone then
-	--	-- print("flag_watcher not bgzone")
-	--  return
-	--end
 	
-	---- Ïðîøëî ëè äîñòàòî÷íî âðåìåíè ñ ïîñëåäíåãî îáíîâëåíèÿ
+	---- ÐŸÑ€Ð¾ÑˆÐ»Ð¾ Ð»Ð¸ Ð´Ð¾ÑÑ‚Ð°Ñ‚Ð¾Ñ‡Ð½Ð¾ Ð²Ñ€ÐµÐ¼ÐµÐ½Ð¸ Ñ Ð¿Ð¾ÑÐ»ÐµÐ´Ð½ÐµÐ³Ð¾ Ð¾Ð±Ð½Ð¾Ð²Ð»ÐµÐ½Ð¸Ñ
 	--local now = time();
 	--if (_next_flag_check > now) then
 	--	--print("now < _next_flag_check")
@@ -147,17 +103,17 @@ function flag_watcher()
 	--  return ;
 	--end
 	
-	---- Çàïîìèíàåì êîãäà íàäî ñíîâà îáíîâèòüñÿ
+	---- Ð—Ð°Ð¿Ð¾Ð¼Ð¸Ð½Ð°ÐµÐ¼ ÐºÐ¾Ð³Ð´Ð° Ð½Ð°Ð´Ð¾ ÑÐ½Ð¾Ð²Ð° Ð¾Ð±Ð½Ð¾Ð²Ð¸Ñ‚ÑŒÑÑ
 	--_next_flag_check = now + 4 ; -- minimal
 	
-	---- íå ïîíÿòíî çà÷åì 0 - îðäà 1 - àëüÿíñ
+	---- Ð½Ðµ Ð¿Ð¾Ð½ÑÑ‚Ð½Ð¾ Ð·Ð°Ñ‡ÐµÐ¼ 0 - Ð¾Ñ€Ð´Ð° 1 - Ð°Ð»ÑŒÑÐ½Ñ
 	----local p_faction = 0 ; -- 0 == horde, 1 == alliance, -1 == offline
 	----if (get_bg_faction() == "A") then
 	----  p_faction = 1 ;
 	----end
 	
 	
-	---- Åñëè îòðûòî îêíî ñ ðåçóëüòàòàìè
+	---- Ð•ÑÐ»Ð¸ Ð¾Ñ‚Ñ€Ñ‹Ñ‚Ð¾ Ð¾ÐºÐ½Ð¾ Ñ Ñ€ÐµÐ·ÑƒÐ»ÑŒÑ‚Ð°Ñ‚Ð°Ð¼Ð¸
 	--if (WorldStateScoreFrame:IsVisible()) then
 	--	print("WorldStateScoreFrame return")
 	--  return ;
@@ -173,7 +129,7 @@ function flag_watcher()
 	--  return ;
 	--end
 	
-	---- Åñëè çíà÷åíèÿ åñòü òî áåðóòñÿ îíè, èíà÷å íîâàÿ ñòðîêà
+	---- Ð•ÑÐ»Ð¸ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ñ ÐµÑÑ‚ÑŒ Ñ‚Ð¾ Ð±ÐµÑ€ÑƒÑ‚ÑÑ Ð¾Ð½Ð¸, Ð¸Ð½Ð°Ñ‡Ðµ Ð½Ð¾Ð²Ð°Ñ ÑÑ‚Ñ€Ð¾ÐºÐ°
 	--_flags = _flags or new() ;
 	--_enemy = _enemy or new() ;
 	
@@ -251,38 +207,28 @@ function flag_watcher()
 end
 
 
-function get_bg_faction()
-  if (_instance_faction) then
-    return _instance_faction ;
-  end
-  local numScores    = GetNumBattlefieldScores() ;
-  local nMembers     = 0 ;
-  local hks          = 0 ;
-  local honor        = 0 ;
-  local deaths       = 0 ;
-  local i ;
-  for i=1, numScores do
-    local name, killingBlows, honorableKills, deaths, honorGained, faction, rank, race, class, filename, damageDone, healingDone = GetBattlefieldScore(i);
-    if (faction and (faction == 0)) then
-      faction = "H" ;
-    elseif (faction) then
-      faction = "A" ;
-    end
-    if (name == player_name) then
-      _instance_faction = faction ;
-      return faction ;	
-    end
-  end  
-  return "n" ;
-end
+--function get_bg_faction()
+--  if (_instance_faction) then
+--    return _instance_faction ;
+--  end
+--  local numScores    = GetNumBattlefieldScores() ;
+--  local nMembers     = 0 ;
+--  local hks          = 0 ;
+--  local honor        = 0 ;
+--  local deaths       = 0 ;
+--  local i ;
+--  for i=1, numScores do
+--    local name, killingBlows, honorableKills, deaths, honorGained, faction, rank, race, class, filename, damageDone, healingDone = GetBattlefieldScore(i);
+--    if (faction and (faction == 0)) then
+--      faction = "H" ;
+--    elseif (faction) then
+--      faction = "A" ;
+--    end
+--    if (name == player_name) then
+--      _instance_faction = faction ;
+--      return faction ;	
+--    end
+--  end  
+--  return "n" ;
+--end
 
-do
-	AV = Api.NewFrame(function()
-		return Common.IsInsidePvpZone() and GetCurrentMapAreaID() == TargetMapId
-	end,
-	{
-		"CHAT_MSG_MONSTER_YELL"
-	})
-
-	AV:Subscribe()
-end
