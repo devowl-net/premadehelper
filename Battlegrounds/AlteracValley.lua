@@ -16,12 +16,10 @@ local bgzone = false
 
 do
 	AV = Api.NewFrame(function()
-		--return Common.IsInsidePvpZone() and GetCurrentMapAreaID() == TargetMapId
 		return GetCurrentMapAreaID() == TargetMapId
 	end,
 	{
-		"CHAT_MSG_MONSTER_YELL",
-		--"SPELL_CAST_SUCCESS"
+		"CHAT_MSG_MONSTER_YELL"
 	})
 
 	AV:Subscribe()

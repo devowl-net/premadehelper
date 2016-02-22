@@ -1,6 +1,13 @@
-print("----API init----")
-
 Api = {};
+
+Api.CombatLogs = {
+	"SWING",
+	"RANGE",
+	"SPELL",
+	--"SPELL_PERIODIC", 
+	"SPELL_BUILDING",
+	"ENVIRONMENTAL"
+};
 
 function Api.NewFrame(workCallback, ...)
 	local frame =  CreateFrame("Frame");
@@ -8,8 +15,25 @@ function Api.NewFrame(workCallback, ...)
 		-- События на которые подписывается пользователь
 	frame.Events = ...
 	frame["WorkCallback"] = workCallback
-	-- События которые нужны что бы поджечь те которые не поджигаются сами
-	frame.Internal_Events = { "COMBAT_LOG_EVENT_UNFILTERED" }
+	
+	combatLog = false
+	Api.__Enumerate(frame, Api.CombatLogs,
+		function(self, combatEventName)
+			Api.__Enumerate(self, self.Events,
+				function(self, eventName)
+					if(string.sub(eventName,1,string.len(combatEventName)) == combatEventName) then
+						combatLog = true
+					end
+				end)
+		end)
+	
+	frame.Internal_Events = {};
+	if combatLog then
+		-- События которые нужны что бы поджечь те которые не поджигаются сами
+		-- http://wowwiki.wikia.com/wiki/API_COMBAT_LOG_EVENT
+		frame.Internal_Events = { "COMBAT_LOG_EVENT_UNFILTERED" }
+	end
+	
 	frame["Unsubscribe"] = Api.Unsubscribe
 	frame["__Enumerate"] = Api.__Enumerate
 	return frame
@@ -23,9 +47,9 @@ function eventHandler(self, eventName, ...)
 		return
 	end
 
-	--print("[timestamp]".. __tostring(timestamp).." [eventName] "..__tostring(eventName).." [sourceEventName] "..__tostring(sourceEventName)..__UnpackToString(...))
+	--print("[timestamp]".. __tostring(timestamp).." [eventName] "..__tostring(eventName).." [sourceEventName] "..__tostring(sourceEventName)..__unpackToString(...))
 	if self.Events[eventName] then
-		--print(" [eventName] "..__tostring(eventName).."[timestamp]".. __tostring(timestamp).." 0) "..__tostring(sourceEventName)..__UnpackToString(...))
+		--print(" [eventName] "..__tostring(eventName).."[timestamp]".. __tostring(timestamp).." 0) "..__tostring(sourceEventName)..__unpackToString(...))
 		FireEvent(self, eventName, ...)
 		--self[eventName](self, sourceEventName, ...); 
 	elseif self.Internal_Events[eventName] then
@@ -93,7 +117,7 @@ function Api.__Enumerate(self, sourceTable, callback)
 end
 
 -- Вывод параметров
-function __UnpackToString(...)
+function __unpackToString(...)
 	local result = ""
 	local args = { params = select("#", ...), ... }
 	for i = 1, args.params do

@@ -86,6 +86,7 @@ local WARRIOR = { ["Оружие"]           = "Melee",
                   ["Защита"]           = "Tank",
                 } ; 
 
+_L.BgRoles = {}
 _L.BgRoles["DEATHKNIGHT" ] = DK ;
 _L.BgRoles["DRUID"       ] = DRUID ;
 _L.BgRoles["HUNTER"      ] = HUNTER ;
