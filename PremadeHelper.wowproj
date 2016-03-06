@@ -61,6 +61,7 @@
     <Content Include="TestCode.lua">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="TODO.txt" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Libs/LibStub/LibStub.lua">

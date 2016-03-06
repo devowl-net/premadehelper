@@ -25,6 +25,17 @@ do
 	AV:Subscribe()
 end
 
+
+-- local unit = "boss1" 
+-- local health = UnitHealth(unit);
+-- print(health)
+
+
+--local unit = "boss2"
+--distanceSquared, checkedDistance = UnitDistanceSquared(unit)
+
+--print("distanceSquared "..distanceSquared.. " checkedDistance "..tostring(checkedDistance))
+
 function AV:CHAT_MSG_MONSTER_YELL(message, sender)
 	if message == nil or sender == nil then return end
 	
