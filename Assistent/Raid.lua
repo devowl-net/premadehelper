@@ -1,6 +1,9 @@
 ﻿print("AssistPromoter module")
 local AssistPromoter = nil
 
+local BgPlayers = {}
+local RaidPlayers = {}
+
 do
 	AssistPromoter = Api.NewFrame(function()
 		-- ТОКА В МИРЕ. В мире не работает
@@ -14,10 +17,20 @@ do
 end
 
 function AssistPromoter:GROUP_ROSTER_UPDATE(...)
-	print("GROUP_ROSTER_UPDATE")
+	local currentZone = GetCurrentMapAreaID()
+	
+	if (currentZone == IoC.MapId or currentZone == AV.MapId) then
+		-- Its Av or IoC now
+		Battleground40People()
+	elseif not Common.IsInsidePvpZone() then
+		-- Its out of bg zone
+		BgPlayers = {}
+	else
+		-- Other battlegrounds or pvp zone for example
+	end
 end
 
-function GetFraction()
+function AssistPromoter:GetFraction()
 	local unit = "player"
 	local englishFaction, localizedFaction = UnitFactionGroup(unit)
 	local sideNumber = -1

@@ -55,7 +55,7 @@
     <Content Include="RaidFrame.xml">
       <SubType>Frame</SubType>
     </Content>
-    <Content Include="RaidPrepare\AssistPromoter.lua">
+    <Content Include="Assistent\Raid.lua">
       <SubType>Code</SubType>
     </Content>
     <Content Include="TestCode.lua">
@@ -270,7 +270,7 @@
     <Folder Include="Battlegrounds" />
     <Folder Include="Helpers" />
     <Folder Include="localization" />
-    <Folder Include="RaidPrepare" />
+    <Folder Include="Assistent" />
   </ItemGroup>
   <Import Project="$(DevEnvDir)\Extensions\Tools\MSBuild\Microsoft\WowAddonStudio\3.0\WowAddonStudio.targets" />
   <!--

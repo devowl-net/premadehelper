@@ -12,4 +12,4 @@ PremadeHelper.lua
 Battlegrounds\AlteracValley.lua
 Battlegrounds\IslandOfConquest.lua
 Battlegrounds\Battlegrounds.lua
-RaidPrepare\AssistPromoter.lua
+Assistent\Raid.lua

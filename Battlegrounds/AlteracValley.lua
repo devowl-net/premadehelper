@@ -16,11 +16,13 @@ local bgzone = false
 
 do
 	AV = Api.NewFrame(function()
-		return GetCurrentMapAreaID() == TargetMapId
+		return GetCurrentMapAreaID() == AV.MapId
 	end,
 	{
 		"CHAT_MSG_MONSTER_YELL"
 	})
+	
+	AV.MapId = TargetMapId
 
 	AV:Subscribe()
 end
