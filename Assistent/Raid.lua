@@ -1,4 +1,4 @@
-﻿print("AssistPromoter module")
+﻿print("Raid module")
 local AssistPromoter = nil
 
 local BgPlayers = {}
@@ -30,7 +30,23 @@ function AssistPromoter:GROUP_ROSTER_UPDATE(...)
 	end
 end
 
+function AssistPromoter:Battleground40People()
+	for i=1, GetNumBattlefieldScores() do
+		local name, killingBlows, honorableKills, deaths, honorGained, faction, rank, race, class = GetBattlefieldScore(i);
+		
+		if BgPlayers[name] == nil then 
+		else
+			BgPlayers[name] = {}
+		end
+	end
+end
+
 function AssistPromoter:GetFraction()
+
+	if AssistPromoter["Fraction"] ~= nil then
+		return AssistPromoter["Fraction"]
+	end
+
 	local unit = "player"
 	local englishFaction, localizedFaction = UnitFactionGroup(unit)
 	local sideNumber = -1
@@ -43,7 +59,10 @@ function AssistPromoter:GetFraction()
 		sideNumber = 1
 	end
 
-	return sideNumber, englishFaction, localizedFaction
+	--return sideNumber, englishFaction, localizedFaction
+	AssistPromoter["Fraction"] = sideNumber, englishFaction, localizedFaction
+
+	return AssistPromoter["Fraction"]
 end
 
 -- C_LFGList.CreateListing(16, "Фарм ХК", 0, "", "Join quick !", true)
