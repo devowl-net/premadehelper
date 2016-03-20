@@ -1,6 +1,6 @@
 ﻿print("AV MODULE LOAD")
 
-local AV = nil
+AV = nil
 
 
 -- http://wow.gamepedia.com/MapID

@@ -81,7 +81,7 @@ function IsUnfiltered(eventName)
 end
 
 -- Подписка
-function Api.Subscribe(self)
+function Api:Subscribe()
 	self:SetScript("OnEvent", eventHandler);
 	
 	-- пользовательские события
@@ -109,7 +109,7 @@ function Api.Unsubscribe()
 end
 
 -- Перечисление
-function Api.__Enumerate(self, sourceTable, callback)
+function Api:__Enumerate(sourceTable, callback)
 	for f, t in ipairs( sourceTable ) do
 		local functionName = t
 		callback(self, functionName)

@@ -21,7 +21,7 @@ function AssistPromoter:GROUP_ROSTER_UPDATE(...)
 	
 	if (currentZone == IoC.MapId or currentZone == AV.MapId) then
 		-- Its Av or IoC now
-		Battleground40People()
+		self:Battleground40People()
 	elseif not Common.IsInsidePvpZone() then
 		-- Its out of bg zone
 		BgPlayers = {}
