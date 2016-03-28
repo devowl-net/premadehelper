@@ -45,7 +45,7 @@ function AV:CHAT_MSG_MONSTER_YELL(message, sender)
 	if sender == _L["Drektar"] then 
 		underAttackMessage = __merge(_L["Drektar"], _L["UnderAttack"])
 	elseif sender == _L["Vandar"] then
-		underAttackMessage = __merge(_L["Vandar"], _L["UnderAttack"])
+		-- underAttackMessage = __merge(_L["Vandar"], _L["UnderAttack"])
 	end
 
 	if underAttackMessage ~= nil then

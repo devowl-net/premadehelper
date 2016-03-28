@@ -59,9 +59,10 @@ function IoC:SPELL_BUILDING_DAMAGE(_, sourceGUID, p8, damage, p6, destGUID, dest
 	
 	if damagePercent % PerDamagePeriod == 0 then
 
-		local hordeWarning = destName:find(_L["Horde"])
-		local allyWarning = destName:find(_L["Alliance"]) 
-
+		local hordeWarning = string.find(destName, _L["Horde"]) ~= nil
+		local allyWarning = string.find(destName, _L["Alliance"]) ~= nil
+		
+		print("Cond:"..tostring(damagePercent)..":"..tostring(hordeWarning)..":"..tostring(HordeGateWarnings[damagePercent]))
 		-- Если урон уже был опубликован то по новой не выводим, урон может повторяться для каждой башни.
 		if (hordeWarning and HordeGateWarnings[damagePercent] ~= nil) or (allyWarning and AllyGateWarnings[damagePercent] ~= nil) then
 			return
