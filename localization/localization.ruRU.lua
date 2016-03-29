@@ -13,6 +13,9 @@ _L["UnderAttack"	] = "Атакован"
 _L["Alliance"	] = "Альянс"
 _L["Horde"	] = "Орда"
 
+_L["IoCAlliance"	] = "Альянса"
+_L["IoCHorde"	] = "Орды"
+
 _L.Marks = { [ "skull" ] = "{крест}",
 			 [ "circle" ] = "{круг}" 
 			};

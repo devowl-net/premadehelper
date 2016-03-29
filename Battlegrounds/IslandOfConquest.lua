@@ -11,7 +11,8 @@ local HordeGateWarnings = {}
 local DEFAULT_INITIAL_GATE_HEALTH = 600000
 
 local TargetMapId = 540;
-local PerDamagePeriod = 5
+local PerDamagePeriod = 10
+
 
 do
 	IoC = Api.NewFrame(function()
@@ -38,9 +39,6 @@ function IoC:SPELL_BUILDING_DAMAGE(_, sourceGUID, p8, damage, p6, destGUID, dest
 		return
 	end
 	
-	--print(__tostring(p1)..":"..__tostring(p2)..":"..__tostring(p3)..":"..__tostring(p4)..":"..__tostring(p5)..":"..__tostring(p6)..":"..__tostring(damage)..":"..__tostring(p8))
-	
-	
 	local guid = destGUID
 	local currentHP = gateHP[guid]
 
@@ -59,23 +57,27 @@ function IoC:SPELL_BUILDING_DAMAGE(_, sourceGUID, p8, damage, p6, destGUID, dest
 	
 	if damagePercent % PerDamagePeriod == 0 then
 
-		local hordeWarning = string.find(destName, _L["Horde"]) ~= nil
-		local allyWarning = string.find(destName, _L["Alliance"]) ~= nil
+		local hordeWarning = string.find(destName, _L["IoCHorde"]) ~= nil
+		local allyWarning = string.find(destName, _L["IoCAlliance"]) ~= nil
 		
-		print("Cond:"..tostring(damagePercent)..":"..tostring(hordeWarning)..":"..tostring(HordeGateWarnings[damagePercent]))
 		-- Если урон уже был опубликован то по новой не выводим, урон может повторяться для каждой башни.
 		if (hordeWarning and HordeGateWarnings[damagePercent] ~= nil) or (allyWarning and AllyGateWarnings[damagePercent] ~= nil) then
 			return
 		end
 		
 		if allyWarning then
-			AllyGateWarnings[damagePercent] = true
+			return
+			--AllyGateWarnings[damagePercent] = true
 		end
 
 		if hordeWarning then
 			HordeGateWarnings[damagePercent] = true
 		end
-
-		print("-> "..destName.." -> "..tostring(damagePercent).."%")
+		
+		local gateHealth = __merge(destName, tostring(damagePercent).."%")
+		local message = Common:FormatInstanceMessage(gateHealth)
+		SendChatMessage(message, "INSTANCE_CHAT" )
+		--print(message);
+		--print("-> "..destName.." -> "..tostring(damagePercent).."%")
 	end
 end
