@@ -1,33 +1,33 @@
 print("IoC MODULE LOAD")
 
-IoC = nil
+IoC = {}
 
 -- Системные переменные
 local gateHP = {}
-local LastPercents;
+local LastPercents	;
 
 -- Константы
 local DEFAULT_INITIAL_GATE_HEALTH = 600000
 
 local TargetMapId = 540;
 
-local HordeDamageFlow = {
-	0  = { Left = -10, Right = 0 },
-	5  = { Left = 0, Right = 5 },
-	10 = { Left = 5, Right = 10 },
-	15 = { Left = 10, Right = 15 },
-	20 = { Left = 15, Right = 20 },
-	25 = { Left = 20, Right = 25 },
-	30 = { Left = 25, Right = 30 },
-	40 = { Left = 30, Right = 40 },
-	50 = { Left = 40, Right = 50 },
-	60 = { Left = 50, Right = 60 },
-	70 = { Left = 60, Right = 70 },
-	80 = { Left = 70, Right = 80 },
-	90 = { Left = 80, Right = 90 },
-}
+local HordeDamageFlow = {}
 
-function IoC:IsInInterval(left, right, currentValue)
+HordeDamageFlow[0 ] = { Left = -10, Right = 0 }
+HordeDamageFlow[5 ] = { Left = 0, Right = 5 }
+HordeDamageFlow[10] = { Left = 5, Right = 10 }
+HordeDamageFlow[15] = { Left = 10, Right = 15 }
+HordeDamageFlow[20] = { Left = 15, Right = 20 }
+HordeDamageFlow[25] = { Left = 20, Right = 25 }
+HordeDamageFlow[30] = { Left = 25, Right = 30 }
+HordeDamageFlow[40] = { Left = 30, Right = 40 }
+HordeDamageFlow[50] = { Left = 40, Right = 50 }
+HordeDamageFlow[60] = { Left = 50, Right = 60 }
+HordeDamageFlow[70] = { Left = 60, Right = 70 }
+HordeDamageFlow[80] = { Left = 70, Right = 80 }
+HordeDamageFlow[90] = { Left = 80, Right = 90 }
+
+function IsInInterval(left, right, currentValue)
 	return left < currentValue  and currentValue < right;
 end
 
@@ -96,6 +96,7 @@ function IoC:SPELL_BUILDING_DAMAGE(_, sourceGUID, p8, damage, p6, destGUID, dest
 		end
 	end
 
+	print(__tostring(resultDamage).. " " .. __tostring(LastPercents))
 	if resultDamage == nil or resultDamage >= LastPercents then 
 		return
 	end
