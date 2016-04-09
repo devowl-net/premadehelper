@@ -102,7 +102,7 @@ function IoC:SPELL_BUILDING_DAMAGE(_, sourceGUID, p8, damage, p6, destGUID, dest
 	end
 
 	-- Если бьют еще одни ворота, то дублировать не надо
-	if resultDamage >= LastPercents then 
+	if resultDamage > LastPercents then 
 		return
 	end
 	
