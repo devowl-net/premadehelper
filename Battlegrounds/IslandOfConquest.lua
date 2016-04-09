@@ -4,7 +4,7 @@ IoC = {}
 
 -- Системные переменные
 local gateHP = {}
-local LastPercents	;
+local LastPercents = 100;
 
 -- Константы
 local DEFAULT_INITIAL_GATE_HEALTH = 600000
@@ -47,7 +47,7 @@ do
 			return true
 		else
 			gateHP = {}
-			LastPercents = -1
+			LastPercents = 100
 			return false
 		end
 	end,
@@ -96,15 +96,22 @@ function IoC:SPELL_BUILDING_DAMAGE(_, sourceGUID, p8, damage, p6, destGUID, dest
 		end
 	end
 
-	print(__tostring(resultDamage).. " " .. __tostring(LastPercents))
-	if resultDamage == nil or resultDamage >= LastPercents then 
+	-- Не логированный урон
+	if resultDamage == nil then 
+		return
+	end
+
+	-- Если бьют еще одни ворота, то дублировать не надо
+	if resultDamage >= LastPercents then 
 		return
 	end
 	
+	print(__tostring(resultDamage).. " " .. __tostring(LastPercents))
+
 	LastPercents = resultDamage
 	local gateHealth = __merge(destName, tostring(resultDamage).."%")
 	local message = Common:FormatInstanceMessage(gateHealth)
-	--SendChatMessage(message, "INSTANCE_CHAT" )
-	print(message);
+	SendChatMessage(message, "INSTANCE_CHAT" )
+	--print(message);
 	--print("-> "..destName.." -> "..tostring(damagePercent).."%")
 end
