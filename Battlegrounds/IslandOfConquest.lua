@@ -28,7 +28,7 @@ HordeDamageFlow[80] = { Left = 70, Right = 80 }
 HordeDamageFlow[90] = { Left = 80, Right = 90 }
 
 function IsInInterval(left, right, currentValue)
-	return left < currentValue  and currentValue < right;
+	return left < currentValue  and currentValue <= right;
 end
 
 -- local test = { "1", "2", "5" }
@@ -102,7 +102,8 @@ function IoC:SPELL_BUILDING_DAMAGE(_, sourceGUID, p8, damage, p6, destGUID, dest
 	end
 
 	-- ≈сли бьют еще одни ворота, то дублировать не надо
-	if resultDamage > LastPercents then 
+	if resultDamage >= LastPercents then 
+		-- PS если равень то весь отрезок будет спам
 		return
 	end
 	
@@ -111,7 +112,7 @@ function IoC:SPELL_BUILDING_DAMAGE(_, sourceGUID, p8, damage, p6, destGUID, dest
 	LastPercents = resultDamage
 	local gateHealth = __merge(destName, tostring(resultDamage).."%")
 	local message = Common:FormatInstanceMessage(gateHealth)
-	SendChatMessage(message, "INSTANCE_CHAT" )
+	--SendChatMessage(message, "INSTANCE_CHAT" )
 	--print(message);
-	--print("-> "..destName.." -> "..tostring(damagePercent).."%")
+	print("-> "..destName.." -> "..tostring(damagePercent).."%")
 end
