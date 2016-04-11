@@ -14,9 +14,9 @@
 		</Backdrop>
 		<Frames>
 			<Button name="bRefreshList" inherits="UIPanelSquareButton" parent="" text="Обновить">
-				<Size x="117" y="36" />
+				<Size x="158" y="45" />
 				<Anchors>
-					<Anchor point="TOPLEFT" x="250" y="-511" />
+					<Anchor point="TOPLEFT" x="209" y="-502" />
 				</Anchors>
 				<Scripts>
 					<OnClick>

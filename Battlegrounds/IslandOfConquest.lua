@@ -112,7 +112,7 @@ function IoC:SPELL_BUILDING_DAMAGE(_, sourceGUID, p8, damage, p6, destGUID, dest
 	LastPercents = resultDamage
 	local gateHealth = __merge(destName, tostring(resultDamage).."%")
 	local message = Common:FormatInstanceMessage(gateHealth)
-	--SendChatMessage(message, "INSTANCE_CHAT" )
+	SendChatMessage(message, "INSTANCE_CHAT" )
 	--print(message);
-	print("-> "..destName.." -> "..tostring(damagePercent).."%")
+	--print("-> "..destName.." -> "..tostring(damagePercent).."%")
 end
