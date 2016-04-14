@@ -47,14 +47,10 @@ function eventHandler(self, eventName, ...)
 		return
 	end
 
-	--print("[timestamp]".. __tostring(timestamp).." [eventName] "..__tostring(eventName).." [sourceEventName] "..__tostring(sourceEventName)..__unpackToString(...))
 	if self.Events[eventName] then
-		--print(" [eventName] "..__tostring(eventName).."[timestamp]".. __tostring(timestamp).." 0) "..__tostring(sourceEventName)..__unpackToString(...))
 		FireEvent(self, eventName, ...)
-		--self[eventName](self, sourceEventName, ...); 
 	elseif self.Internal_Events[eventName] then
 		FireUnfilteredEvent(self, eventName, ...)
-		--self[sourceEventName](self, ...)
 	end
 end
 
@@ -65,7 +61,6 @@ function FireUnfilteredEvent(self, eventName, param1, param2, ...)
 	eventName = param2
 	
 	if self.Events[eventName] then
-		--print("Calling Unfiltered: " .. eventName)
 		self[eventName](self, ...)
 	end
 	

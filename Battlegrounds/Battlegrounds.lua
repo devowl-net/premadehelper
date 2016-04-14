@@ -1,6 +1,7 @@
 ﻿print("Battleground module")
 local Battlegrounds = nil
 local BattlegroundsTracker = nil
+local nextUpdateTime = nil
 
 local Flags = {};
 HeroismIds = 
@@ -12,33 +13,35 @@ HeroismIds =
   [102351] = "Барабаны ярости"
 };
 
+function AVIoCZone()
+	local currentZone = GetCurrentMapAreaID()
+	return currentZone == IoC.MapId and currentZone == AV.MapId
+end
+
 do
-	Battlegrounds = Api.NewFrame(function()
-		local currentZone = GetCurrentMapAreaID()
-	
-		if (currentZone ~= IoC.MapId and currentZone ~= AV.MapId) then
-			print("Refresh")
-			Flags =  {};
-		end
-	end,
-	{
-		"SPELL_CAST_SUCCESS"
-	})
+	Battlegrounds = Api.NewFrame(AVIoCZone,
+		{
+			"SPELL_CAST_SUCCESS"
+		})
 	
 	Battlegrounds:Subscribe()
 end
 
 do
 	BattlegroundsTracker = Api.NewFrame(function()
-		local currentZone = GetCurrentMapAreaID()
-	
-		if (currentZone ~= IoC.MapId and currentZone ~= AV.MapId) then
-			print("Refresh")
+		local rightZone = AVIoCZone()
+		if rightZone then
+			if nextUpdateTime == nil then
+				nextUpdateTime = time() + 4
+			end
+		else
 			Flags =  {};
+			nextUpdateTime = nil
 		end
+		
+		return rightZone
 	end,
 	{
-		"SPELL_CAST_SUCCESS",
 		"UPDATE_BATTLEFIELD_SCORE"
 	})
 	
@@ -46,7 +49,6 @@ do
 end
 
 function Battlegrounds:SPELL_CAST_SUCCESS(...)
-	--print(__unpackToString(...))
 	local caster  = select(3, ...);
    	local spellId = select(10, ...);
 	if HeroismIds[spellId] ~= nil then
@@ -54,15 +56,20 @@ function Battlegrounds:SPELL_CAST_SUCCESS(...)
 	end
 end
 
+
 function BattlegroundsTracker:UPDATE_BATTLEFIELD_SCORE(...)
+
+	if (nextUpdateTime > time()) then
+		-- Если еще не настало время следующего обновления
+		return
+	end
 	
-	return
+	nextUpdateTime = time() + 4
+
 	local bgPlayers = GetNumBattlefieldScores()
 	if (bgPlayers <= 15) then
 		return
 	end
-
-	print(bgPlayers)
 	
 	-- Судя по всему отрытый фрем паганит данные
 	if WorldStateScoreFrame:IsVisible() then
