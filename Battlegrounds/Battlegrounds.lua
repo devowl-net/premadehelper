@@ -15,8 +15,9 @@ HeroismIds =
 
 function AVIoCZone()
 	local currentZone = GetCurrentMapAreaID()
-	return currentZone == IoC.MapId and currentZone == AV.MapId
+	return currentZone == IoC.MapId or currentZone == AV.MapId
 end
+
 
 do
 	Battlegrounds = Api.NewFrame(AVIoCZone,
@@ -25,6 +26,14 @@ do
 		})
 	
 	Battlegrounds:Subscribe()
+end
+
+function Battlegrounds:SPELL_CAST_SUCCESS(...)
+	local caster  = select(3, ...);
+   	local spellId = select(10, ...);
+	if HeroismIds[spellId] ~= nil then
+		print("Гера: "..caster.."-"..HeroismIds[spellId])
+	end
 end
 
 do
@@ -48,17 +57,8 @@ do
 	BattlegroundsTracker:Subscribe()
 end
 
-function Battlegrounds:SPELL_CAST_SUCCESS(...)
-	local caster  = select(3, ...);
-   	local spellId = select(10, ...);
-	if HeroismIds[spellId] ~= nil then
-		print("Гера: "..caster.."-"..HeroismIds[spellId])
-	end
-end
-
-
 function BattlegroundsTracker:UPDATE_BATTLEFIELD_SCORE(...)
-
+	
 	if (nextUpdateTime > time()) then
 		-- Если еще не настало время следующего обновления
 		return
@@ -95,7 +95,7 @@ function BattlegroundsTracker:UPDATE_BATTLEFIELD_SCORE(...)
 		
 		-- Валидная фракция и валидное имя
 		if name and faction and faction ~= -1 then
-
+			
 			-- http://wowprogramming.com/docs/api/GetNumBattlefieldStats
 			-- Returns the number of battleground-specific statistics on the current battleground's 
 			-- scoreboard. Battleground-specific statistics include flags captured in Warsong Gulch, 
@@ -105,7 +105,7 @@ function BattlegroundsTracker:UPDATE_BATTLEFIELD_SCORE(...)
 			if Flags[name] == nil then
 				Flags[name] = {}
 			end
-
+			
 			for j = 1, bgStats do
 				-- http://wowprogramming.com/docs/api/GetBattlefieldStatData
 				-- Returns battleground-specific scoreboard information for a battleground participant. 
@@ -119,7 +119,7 @@ function BattlegroundsTracker:UPDATE_BATTLEFIELD_SCORE(...)
 				
 				-- Если человек что то захватил и изменилось значение в колонке
 				if (Flags[name][j] ~= playerStatData) then
-
+					
 					-- http://wowprogramming.com/docs/api/GetBattlefieldStatInfo
 					-- Returns information about a battleground-specific scoreboard column. 
 					-- Battleground-specific statistics include flags captured in Warsong Gulch, 
@@ -130,11 +130,10 @@ function BattlegroundsTracker:UPDATE_BATTLEFIELD_SCORE(...)
 						str = _L.BaseStates[stat_name] ..":  ".. name ;
 					end
 	
-					print("...."..str)
+					print("[PH] CHEKER:"..str)
 				end
 				
-				Flags[name][j] = stat ;
-				print("...."..name.." "..tostring(stat))
+				Flags[name][j] = playerStatData ;
 			end
 		end
 	end
