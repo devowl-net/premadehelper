@@ -129,7 +129,7 @@ function BattlegroundsTracker:UPDATE_BATTLEFIELD_SCORE(...)
 					if (_L.BaseStates[ stat_name ] ~= nil) then
 						str = _L.BaseStates[stat_name] ..":  ".. name ;
 					end
-	
+			
 					print("[PH] CHEKER:"..str)
 				end
 				
@@ -137,5 +137,55 @@ function BattlegroundsTracker:UPDATE_BATTLEFIELD_SCORE(...)
 			end
 		end
 	end
-	
 end
+
+function GetFullInfo(playerName)
+	local i
+	for i = 1, 40 do 
+		-- Returns information about a member of the player's raid
+		-- http://wowprogramming.com/docs/api/GetRaidRosterInfo
+		-- name - Name of the raid member (string)
+		-- rank - Rank of the member in the raid (number)
+		--     0 - Raid member
+		--     1 - Raid Assistant
+		--     2 - Raid Leader
+		-- subgroup - Index of the raid subgroup to which the member belongs (between 1 and MAX_RAID_GROUPS) (number)
+		-- level - Character level of the member (number)
+		-- class - Localized name of the member's class (string)
+		-- fileName - A non-localized token representing the member's class (string)
+		-- zone - Name of the zone in which the member is currently located (string)
+		-- online - 1 if the member is currently online; otherwise nil (1nil)
+		-- isDead - 1 if the member is currently dead; otherwise nil (1nil)
+		-- role - Group role assigned to the member (string)
+		--     MAINASSIST
+		--     MAINTANK
+		-- isML - 1 if the member is the master looter; otherwise nil (1nil)
+		name, _, subgroup=GetRaidRosterInfo(i);
+		if(n==s or (c~=nil and n==s.."-"..c))then 
+			return g;
+		end;
+	end;
+
+	-- http://wowprogramming.com/docs/api/UnitClass
+	-- Returns a unit's class. The second return (classFileName) can be used for locale-independent verification of 
+	-- a unit's class, or to look up class-related data in various global tables:
+	-- RAID_CLASS_COLORS provides a standard color for each class (as seen in the default who, guild, calendar, and raid UIs)
+	-- CLASS_ICON_TCOORDS provides coordinates to locate each class' icon within the "Interface\Glues\CharacterCreate\UI-CharacterCreate-Classes" texture
+	playerClass ,_ = UnitClass(playerName);
+	-- SendChatMessage(UnitName("target").." "..p.." group "..g(),"INSTANCE_CHAT");
+
+end
+
+-- /run 
+-- function g()
+-- 	s,c=UnitName("target", true);
+-- 	for i=1,40 do 
+-- 		n,_,g=GetRaidRosterInfo(i);
+-- 		if(n==s or (c~=nil and n==s.."-"..c))
+-- 			then return g;
+-- 			end;
+-- 	end;
+-- end;
+-- p,_=UnitClass("target");
+-- SendChatMessage(UnitName("target").." "..p.." group "..g(),"INSTANCE_CHAT");
+
