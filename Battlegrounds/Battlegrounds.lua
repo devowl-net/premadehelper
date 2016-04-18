@@ -93,8 +93,8 @@ function BattlegroundsTracker:UPDATE_BATTLEFIELD_SCORE(...)
 			race, 
 			class = GetBattlefieldScore(i);
 		
-		-- Валидная фракция и валидное имя
-		if name and faction and faction ~= -1 then
+		-- Валидная фракция и валидное имя. 0 - орда
+		if name and faction and faction == 0 then
 			
 			-- http://wowprogramming.com/docs/api/GetNumBattlefieldStats
 			-- Returns the number of battleground-specific statistics on the current battleground's 
@@ -113,24 +113,27 @@ function BattlegroundsTracker:UPDATE_BATTLEFIELD_SCORE(...)
 				-- in Alterac Valley, etc. For the name and icon associated with each statistic, see GetBattlefieldStatInfo(). 
 				-- For basic battleground score information, see GetBattlefieldScore().
 				local playerStatData = GetBattlefieldStatData(i, j);
-				if (Flags[name][j] == nil) then
-				  Flags[name][j] = 0;
-				end
+				-- if (Flags[name][j] == nil) then
+				--   Flags[name][j] = 0;
+				-- end
 				
 				-- Если человек что то захватил и изменилось значение в колонке
-				if (Flags[name][j] ~= playerStatData) then
+				if (Flags[name][j] ~= nil and Flags[name][j] ~= playerStatData) then
 					
 					-- http://wowprogramming.com/docs/api/GetBattlefieldStatInfo
 					-- Returns information about a battleground-specific scoreboard column. 
 					-- Battleground-specific statistics include flags captured in Warsong Gulch, 
 					-- towers assaulted in Alterac Valley, etc.
 					local stat_name = GetBattlefieldStatInfo( j ) ;
-					local str = stat_name ..":  ".. name ;
+
+					--local playerInfo = GetFullPlayerInfo(name)
+					--local str = stat_name ..":  ".. playerInfo ;
+					-- Нас интересуют только захваты башен и флагов
 					if (_L.BaseStates[ stat_name ] ~= nil) then
-						str = _L.BaseStates[stat_name] ..":  ".. name ;
+						local playerInfo = name
+						str = _L.BaseStates[stat_name] ..":  ".. playerInfo ;
+						print("[PH] CHEKER:".. str)
 					end
-			
-					print("[PH] CHEKER:"..str)
 				end
 				
 				Flags[name][j] = playerStatData ;
@@ -139,9 +142,10 @@ function BattlegroundsTracker:UPDATE_BATTLEFIELD_SCORE(...)
 	end
 end
 
-function GetFullInfo(playerName)
-	local i
+function GetFullPlayerInfo(playerName)
+	local i, subgroup, name, playerClass
 	for i = 1, 40 do 
+
 		-- Returns information about a member of the player's raid
 		-- http://wowprogramming.com/docs/api/GetRaidRosterInfo
 		-- name - Name of the raid member (string)
@@ -161,8 +165,8 @@ function GetFullInfo(playerName)
 		--     MAINTANK
 		-- isML - 1 if the member is the master looter; otherwise nil (1nil)
 		name, _, subgroup=GetRaidRosterInfo(i);
-		if(n==s or (c~=nil and n==s.."-"..c))then 
-			return g;
+		if name == subgroup then 
+			return subgroup;
 		end;
 	end;
 
@@ -172,6 +176,10 @@ function GetFullInfo(playerName)
 	-- RAID_CLASS_COLORS provides a standard color for each class (as seen in the default who, guild, calendar, and raid UIs)
 	-- CLASS_ICON_TCOORDS provides coordinates to locate each class' icon within the "Interface\Glues\CharacterCreate\UI-CharacterCreate-Classes" texture
 	playerClass ,_ = UnitClass(playerName);
+	
+	print(playerName)
+
+	return playerName .. " " .. playerClass .. " группа " .. subgroup
 	-- SendChatMessage(UnitName("target").." "..p.." group "..g(),"INSTANCE_CHAT");
 
 end

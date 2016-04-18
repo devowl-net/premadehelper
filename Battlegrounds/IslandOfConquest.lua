@@ -107,8 +107,6 @@ function IoC:SPELL_BUILDING_DAMAGE(_, sourceGUID, p8, damage, p6, destGUID, dest
 		return
 	end
 	
-	print(__tostring(resultDamage).. " " .. __tostring(LastPercents))
-
 	LastPercents = resultDamage
 	local gateHealth = __merge(destName, tostring(resultDamage).."%")
 	local message = Common:FormatInstanceMessage(gateHealth)
