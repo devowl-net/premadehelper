@@ -3,6 +3,8 @@ local Battlegrounds = nil
 local BattlegroundsTracker = nil
 local nextUpdateTime = nil
 
+-- Трапа раскидывающая рес
+local HunterTrap = 82939
 local Flags = {};
 HeroismIds = 
 {
@@ -18,7 +20,6 @@ function AVIoCZone()
 	return currentZone == IoC.MapId or currentZone == AV.MapId
 end
 
-
 do
 	Battlegrounds = Api.NewFrame(AVIoCZone,
 		{
@@ -33,6 +34,11 @@ function Battlegrounds:SPELL_CAST_SUCCESS(...)
    	local spellId = select(10, ...);
 	if HeroismIds[spellId] ~= nil then
 		print("Гера: "..caster.."-"..HeroismIds[spellId])
+		return
+	end
+	
+	if spellId == HunterTrap then 
+		--print("HunterTrap: "..caster)
 	end
 end
 
@@ -126,13 +132,14 @@ function BattlegroundsTracker:UPDATE_BATTLEFIELD_SCORE(...)
 					-- towers assaulted in Alterac Valley, etc.
 					local stat_name = GetBattlefieldStatInfo( j ) ;
 
-					--local playerInfo = GetFullPlayerInfo(name)
-					--local str = stat_name ..":  ".. playerInfo ;
 					-- Нас интересуют только захваты башен и флагов
 					if (_L.BaseStates[ stat_name ] ~= nil) then
-						local playerInfo = name
-						str = _L.BaseStates[stat_name] ..":  ".. playerInfo ;
-						print("[PH] CHEKER:".. str)
+						
+						local mark = _L.BaseStates[ stat_name ]
+						local resultName = stat_name ..":  ".. name;
+						local message = mark.."[PH] " .. resultName .. " группа [" .. GetPlayerGroup(name) .. "] ".. mark;
+						SendChatMessage(message, "SAY" )
+						--print(mark.."[PH] CHECKER:" .. resultName .. mark)
 					end
 				end
 				
@@ -140,6 +147,37 @@ function BattlegroundsTracker:UPDATE_BATTLEFIELD_SCORE(...)
 			end
 		end
 	end
+end
+
+function GetPlayerGroup(playerName)
+	local i, subgroup, name
+	for i = 1, 40 do 
+
+		-- Returns information about a member of the player's raid
+		-- http://wowprogramming.com/docs/api/GetRaidRosterInfo
+		-- name - Name of the raid member (string)
+		-- rank - Rank of the member in the raid (number)
+		--     0 - Raid member
+		--     1 - Raid Assistant
+		--     2 - Raid Leader
+		-- subgroup - Index of the raid subgroup to which the member belongs (between 1 and MAX_RAID_GROUPS) (number)
+		-- level - Character level of the member (number)
+		-- class - Localized name of the member's class (string)
+		-- fileName - A non-localized token representing the member's class (string)
+		-- zone - Name of the zone in which the member is currently located (string)
+		-- online - 1 if the member is currently online; otherwise nil (1nil)
+		-- isDead - 1 if the member is currently dead; otherwise nil (1nil)
+		-- role - Group role assigned to the member (string)
+		--     MAINASSIST
+		--     MAINTANK
+		-- isML - 1 if the member is the master looter; otherwise nil (1nil)
+		name, _, subgroup=GetRaidRosterInfo(i);
+		if name == playerName then 
+			return subgroup;
+		end;
+	end;
+
+	return "?"
 end
 
 function GetFullPlayerInfo(playerName)
