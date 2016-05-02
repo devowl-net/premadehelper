@@ -48,13 +48,6 @@
     <Content Include="embeds.xml">
       <SubType>Code</SubType>
     </Content>
-    <Content Include="RaidFrame.lua">
-      <SubType>Code</SubType>
-      <DependentUpon>RaidFrame.xml</DependentUpon>
-    </Content>
-    <Content Include="RaidFrame.xml">
-      <SubType>Frame</SubType>
-    </Content>
     <Content Include="Assistent\Raid.lua">
       <SubType>Code</SubType>
     </Content>
@@ -62,6 +55,13 @@
       <SubType>Code</SubType>
     </Content>
     <Content Include="TODO.txt" />
+    <Content Include="UI\Main\DataShow.lua">
+      <SubType>Code</SubType>
+      <DependentUpon>UI\Main\DataShow.xml</DependentUpon>
+    </Content>
+    <Content Include="UI\Main\DataShow.xml">
+      <SubType>Frame</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Libs/LibStub/LibStub.lua">
@@ -271,6 +271,9 @@
     <Folder Include="Helpers" />
     <Folder Include="localization" />
     <Folder Include="Assistent" />
+    <Folder Include="UI" />
+    <Folder Include="UI\Main" />
+    <Folder Include="UI\Controls" />
   </ItemGroup>
   <Import Project="$(DevEnvDir)\Extensions\Tools\MSBuild\Microsoft\WowAddonStudio\3.0\WowAddonStudio.targets" />
   <!--

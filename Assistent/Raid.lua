@@ -6,6 +6,9 @@ local RaidPlayers = {}
 
 do
 	AssistPromoter = Api.NewFrame(function()
+
+		-- ВВВВВВВВЫЫЫЫЫЫЫЫЫККККККККККЛЛЛЛЛЛЛЛЮЮЮЮЮЮЮЮЧЧЧЧЧЧЧЧИИИИИИИИЛЛЛЛЛЛЛЛ
+		return false;
 		-- ТОКА В МИРЕ. В мире не работает
 		-- return not Common.IsInsidePvpZone()
 	end,

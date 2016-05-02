@@ -38,7 +38,7 @@ function Battlegrounds:SPELL_CAST_SUCCESS(...)
 	end
 	
 	if spellId == HunterTrap then 
-		--print("HunterTrap: "..caster)
+		print("HunterTrap: "..caster)
 	end
 end
 
@@ -218,20 +218,5 @@ function GetFullPlayerInfo(playerName)
 	print(playerName)
 
 	return playerName .. " " .. playerClass .. " группа " .. subgroup
-	-- SendChatMessage(UnitName("target").." "..p.." group "..g(),"INSTANCE_CHAT");
-
 end
-
--- /run 
--- function g()
--- 	s,c=UnitName("target", true);
--- 	for i=1,40 do 
--- 		n,_,g=GetRaidRosterInfo(i);
--- 		if(n==s or (c~=nil and n==s.."-"..c))
--- 			then return g;
--- 			end;
--- 	end;
--- end;
--- p,_=UnitClass("target");
--- SendChatMessage(UnitName("target").." "..p.." group "..g(),"INSTANCE_CHAT");
 
