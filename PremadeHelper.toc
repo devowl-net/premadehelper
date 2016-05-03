@@ -15,3 +15,4 @@ Battlegrounds\Battlegrounds.lua
 Assistent\Raid.lua
 UI\Main\DataShow.xml
 UI\Main\DataShow.lua
+UI\Main\MinimapIcon.lua

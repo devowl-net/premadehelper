@@ -1,3 +1,12 @@
-﻿-- Author      : Галина
--- Create Date : 5/1/2016 3:22:37 PM
+﻿
+function DataShow_OnDragStart()
+	DataShow:StartMoving();
+end
 
+function DataShow_OnDragStop()
+	DataShow:StopMovingOrSizing();
+end
+
+function DataShow_OnLoad()
+	DataShow:RegisterForDrag("LeftButton");
+end

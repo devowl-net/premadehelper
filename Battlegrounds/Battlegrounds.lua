@@ -38,7 +38,7 @@ function Battlegrounds:SPELL_CAST_SUCCESS(...)
 	end
 	
 	if spellId == HunterTrap then 
-		print("HunterTrap: "..caster)
+		--print("HunterTrap: "..caster)
 	end
 end
 

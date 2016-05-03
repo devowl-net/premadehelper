@@ -62,6 +62,9 @@
     <Content Include="UI\Main\DataShow.xml">
       <SubType>Frame</SubType>
     </Content>
+    <Content Include="UI\Main\MinimapIcon.lua">
+      <SubType>Code</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Libs/LibStub/LibStub.lua">

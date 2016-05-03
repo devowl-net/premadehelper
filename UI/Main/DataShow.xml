@@ -1,12 +1,12 @@
 ﻿<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<Script file="DataShow.lua" />
-	<Frame name="DataShow" inherits="ButtonFrameTemplate" parent="UIParent" toplevel="true" movable="true">
+	<Frame name="DataShow" inherits="BasicFrameTemplate" parent="UIParent" toplevel="true" movable="true" resizable="true">
 		<Size>
-			<AbsDimension x="375" y="352" />
+			<AbsDimension x="366" y="362" />
 		</Size>
 		<Anchors>
 			<Anchor point="TOPLEFT">
-				<Offset x="118" y="-368" />
+				<Offset x="148" y="-234" />
 			</Anchor>
 		</Anchors>
 		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
@@ -20,6 +20,17 @@
 				<AbsValue val="32" />
 			</EdgeSize>
 		</Backdrop>
+		<Scripts>
+			<OnDragStart>
+				DataShow_OnDragStart()
+			</OnDragStart>
+			<OnDragStop>
+				DataShow_OnDragStop()
+			</OnDragStop>
+			<OnLoad>
+				DataShow_OnLoad()
+			</OnLoad>
+		</Scripts>
 	</Frame>
 	<GameTooltip name="$parentTooltip" parentKey="Tooltip" inherits="GameTooltipTemplate">
 		<Anchors>
