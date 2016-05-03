@@ -1,40 +1,38 @@
-﻿print("Minimap test")
+﻿local addon = LibStub("AceAddon-3.0"):NewAddon("PremadeHelper", "AceConsole-3.0")
+local bunnyLDB = LibStub("LibDataBroker-1.1"):NewDataObject("Bunnies!", {
+	type = "data source",
+	text = "Premade Helper",
+	icon = "Interface\\ICONS\\spell_nature_bloodlust",
+	OnClick = OnButtonClick(),
+})
+local icon = LibStub("LibDBIcon-1.0")
 
-local db; -- File-global handle to the Database
-local defaults = {
- profile = {
- LDBIconStorage = {}, -- LibDBIcon storage
- },
-};
-
-local ldbObject = {
-	 type = "launcher",
-	 icon = "Interface\\ICONS\\spell_nature_bloodlust",
-	--This is the icon used. Any .blp or .tga file is a valid icon.
-	--This path is ALWAYS relative to the World of Warcraft
-	--root (ie, "C:\Program Files\World of Warcraft" for
-	--Windows and "/Applications/World of Warcraft" for Mac)
-	 label = "AddonName",
-	 OnClick = function(self, button)
-	-- Add a click handler here
-	 end,
-	 OnTooltipShow = function(tooltip)
-	 tooltip:AddLine("Example text");
-	--Add text here. The first line is ALWAYS a "header" type.
-	--It will appear slightly larger than subsequent lines of text
-	 end,
-};
-
-function updateDB(self, event, database)
- db = database.profile;
- LibStub("LibDBIcon-1.0"):Refresh("AddonLDBObjectName", db.LDBIconStorage);
+function addon:OnButtonClick()
+	if DataShow:IsVisible() then
+		DataShow:Hide()
+	else
+		DataShow:Show()
+	end
 end
 
-local vars = LibStub("AceDB-3.0"):New("AddonSavedVarStorage", defaults);
-vars:RegisterCallback("OnProfileChanged", updateDB);
-vars:RegisterCallback("OnProfileCopied", updateDB);
-vars:RegisterCallback("OnProfileReset", updateDB);
-db = vars.profile;
+function addon:OnInitialize()
+	-- Obviously you'll need a ## SavedVariables: BunniesDB line in your TOC, duh!
+	self.db = LibStub("AceDB-3.0"):New("BunniesDB", {
+		profile = {
+			minimap = {
+				hide = false,
+			},
+		},
+	})
+	icon:Register("Bunnies!", bunnyLDB, self.db.profile.minimap)
+	--self:RegisterChatCommand("bunnies", "CommandTheBunnies")
+end
 
-LibStub("LibDataBroker-1.1"):NewDataObject("AddonLDBObjectName", ldbObject);
-LibStub("LibDBIcon-1.0"):Register("AddonLDBObjectName", ldbObject, db.LDBIconStorage);
+--function addon:CommandTheBunnies()
+--	self.db.profile.minimap.hide = not self.db.profile.minimap.hide
+--	if self.db.profile.minimap.hide then
+--		icon:Hide("Bunnies!")
+--	else
+--		icon:Show("Bunnies!")
+--	end
+--end

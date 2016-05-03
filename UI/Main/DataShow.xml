@@ -1,6 +1,6 @@
 ﻿<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<Script file="DataShow.lua" />
-	<Frame name="DataShow" inherits="BasicFrameTemplate" parent="UIParent" toplevel="true" movable="true" resizable="true">
+	<Frame name="DataShow" inherits="UIPanelDialogTemplate" hidden="true" parent="UIParent" toplevel="true" movable="true" resizable="true">
 		<Size>
 			<AbsDimension x="366" y="362" />
 		</Size>
