@@ -1,13 +1,9 @@
-﻿local addon = LibStub("AceAddon-3.0"):NewAddon("PremadeHelper", "AceConsole-3.0")
-local bunnyLDB = LibStub("LibDataBroker-1.1"):NewDataObject("Bunnies!", {
-	type = "data source",
-	text = "Premade Helper",
-	icon = "Interface\\ICONS\\spell_nature_bloodlust",
-	OnClick = OnButtonClick(),
-})
+﻿local addon = PremadeHelper --LibStub("AceAddon-3.0"):NewAddon("PremadeHelper", "AceConsole-3.0")
 local icon = LibStub("LibDBIcon-1.0")
 
-function addon:OnButtonClick()
+function OnButtonClick()
+	print("CLICK!~")
+	print(DataShow:IsVisible())
 	if DataShow:IsVisible() then
 		DataShow:Hide()
 	else
@@ -15,16 +11,23 @@ function addon:OnButtonClick()
 	end
 end
 
+local PremadeLDB = LibStub("LibDataBroker-1.1"):NewDataObject("PHObject", {
+	type = "data source",
+	text = "Premade Helper",
+	icon = "Interface\\ICONS\\spell_nature_bloodlust",
+	OnClick = OnButtonClick(),
+})
+
 function addon:OnInitialize()
 	-- Obviously you'll need a ## SavedVariables: BunniesDB line in your TOC, duh!
-	self.db = LibStub("AceDB-3.0"):New("BunniesDB", {
+	self.db = LibStub("AceDB-3.0"):New("PremadeDataBase", {
 		profile = {
 			minimap = {
 				hide = false,
 			},
 		},
 	})
-	icon:Register("Bunnies!", bunnyLDB, self.db.profile.minimap)
+	icon:Register("PHObject", PremadeLDB, self.db.profile.minimap)
 	--self:RegisterChatCommand("bunnies", "CommandTheBunnies")
 end
 
