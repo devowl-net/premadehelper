@@ -1,15 +1,16 @@
 ﻿<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<Script file="DataShow.lua" />
-	<Frame name="DataShow" inherits="UIPanelDialogTemplate" parent="UIParent" toplevel="true" movable="true" resizable="true">
+	<Path />
+	<Frame name="DataShow" inherits="TooltipBorderedFrameTemplate" hidden="true" parent="UIParent" toplevel="true" movable="true" clampedToScreen="true">
 		<Size>
-			<AbsDimension x="366" y="362" />
+			<AbsDimension x="262" y="369" />
 		</Size>
 		<Anchors>
 			<Anchor point="TOPLEFT">
 				<Offset x="148" y="-234" />
 			</Anchor>
 		</Anchors>
-		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Gold-Background" edgeFile="" tile="true">
 			<BackgroundInsets>
 				<AbsInset left="11" right="12" top="12" bottom="11" />
 			</BackgroundInsets>
@@ -20,6 +21,31 @@
 				<AbsValue val="32" />
 			</EdgeSize>
 		</Backdrop>
+		<Frames>
+			<Frame name="tabControl" inherits="TabardFrameCustomizeTemplate" parent="DataShow">
+				<Size x="247" y="316" />
+				<Anchors>
+					<Anchor point="TOPLEFT" x="8" y="-46" />
+				</Anchors>
+				<Backdrop bgFile="" edgeFile="" tile="true">
+					<BackgroundInsets>
+						<AbsInset left="11" right="12" top="12" bottom="11" />
+					</BackgroundInsets>
+					<TileSize val="1" />
+					<EdgeSize val="1" />
+				</Backdrop>
+			</Frame>
+			<CheckButton name="cbEnabled" inherits="UICheckButtonTemplate" parent="DataShow" text="">
+				<Size x="29" y="32" />
+				<Anchors>
+					<Anchor point="TOPLEFT" x="14" y="-8" />
+				</Anchors>
+				<ButtonText font="Fonts\FRIZQT__.TTF">
+					<FontHeight val="12" />
+					<Color r="1" g="1" b="0" />
+				</ButtonText>
+			</CheckButton>
+		</Frames>
 		<Scripts>
 			<OnDragStart>
 				DataShow_OnDragStart()
@@ -32,6 +58,24 @@
 			</OnLoad>
 		</Scripts>
 	</Frame>
+	<GameTooltip name="$parentTooltip" parentKey="Tooltip" inherits="GameTooltipTemplate">
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeKey="$parent.Icon" relativePoint="TOPRIGHT" x="0" y="10" />
+		</Anchors>
+		<Scripts>
+			<OnLoad>
+				self:SetBackdrop(nil);
+			</OnLoad>
+			<OnSizeChanged>
+				local itemTooltipExtraBorderHeight = 22;
+				self:GetParent():SetSize(self:GetWidth() + self:GetParent().Icon:GetWidth(), self:GetHeight() - itemTooltipExtraBorderHeight);
+			</OnSizeChanged>
+			<OnTooltipSetItem>
+				local embeddedItemTooltip = self:GetParent();
+				EmbeddedItemTooltip_OnTooltipSetItem(embeddedItemTooltip);
+			</OnTooltipSetItem>
+		</Scripts>
+	</GameTooltip>
 	<GameTooltip name="$parentTooltip" parentKey="Tooltip" inherits="GameTooltipTemplate">
 		<Anchors>
 			<Anchor point="TOPLEFT" relativeKey="$parent.Icon" relativePoint="TOPRIGHT" x="0" y="10" />

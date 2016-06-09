@@ -1,21 +1,27 @@
 ﻿local addon = PremadeHelper --LibStub("AceAddon-3.0"):NewAddon("PremadeHelper", "AceConsole-3.0")
 local icon = LibStub("LibDBIcon-1.0")
 
-function OnButtonClick()
-	print("CLICK!~")
-	print(DataShow:IsVisible())
-	if DataShow:IsVisible() then
-		DataShow:Hide()
-	else
-		DataShow:Show()
-	end
+function addon:OnMinimapButtonClick()
+	
 end
 
 local PremadeLDB = LibStub("LibDataBroker-1.1"):NewDataObject("PHObject", {
-	type = "data source",
+	type = "launcher",
 	text = "Premade Helper",
 	icon = "Interface\\ICONS\\spell_nature_bloodlust",
-	OnClick = OnButtonClick(),
+	OnClick = function(self, button)
+		-- Minimap icon click
+		if DataShow:IsVisible() then
+			DataShow:Hide()
+		else
+			DataShow:Show()
+		end
+	end,
+	OnTooltipShow = function(tooltip)
+		tooltip:AddLine("Example text");
+		--Add text here. The first line is ALWAYS a "header" type.
+		--It will appear slightly larger than subsequent lines of text
+	end,
 })
 
 function addon:OnInitialize()
