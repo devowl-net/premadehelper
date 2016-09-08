@@ -26,17 +26,6 @@ do
 	AV:Subscribe()
 end
 
-
--- local unit = "boss1" 
--- local health = UnitHealth(unit);
--- print(health)
-
-
---local unit = "boss2"
---distanceSquared, checkedDistance = UnitDistanceSquared(unit)
-
---print("distanceSquared "..distanceSquared.. " checkedDistance "..tostring(checkedDistance))
-
 function AV:CHAT_MSG_MONSTER_YELL(message, sender)
 	if message == nil or sender == nil then return end
 	
@@ -48,32 +37,8 @@ function AV:CHAT_MSG_MONSTER_YELL(message, sender)
 	end
 
 	if underAttackMessage ~= nil then
-		local message = Common:FormatInstanceMessage(underAttackMessage)
-		SendChatMessage(message, "INSTANCE_CHAT" )
+		PHSayInstance(underAttackMessage)
 	end
 end
 
-function BattlegroundEnterOrLeave()
-	--if (Common.IsInsidePvpZone())  then
-	--	local currentZone = GetCurrentMapAreaID()
-	--	if not bgzone and currentZone == TargetMapId then
-	--		frame:RegisterEvent("SPELL_CAST_SUCCESS")
-	--		scoreboard = {};
-	--		print("++ANY++ Alterac Valley helper activated")
-	--		_next_flag_check = time()
-	--		bgzone = true
-	--	else
-	--		print("Alterac Valley OFF")
-	--		frame:UnregisterEvent("SPELL_CAST_SUCCESS")
-	--		bgzone = false
-	--	end
-	--end
-end
 
-function AV:SPELL_CAST_SUCCESS(...)
-   print("SPELL_CAST_SUCCESS")
-end
-
-function AV:UPDATE_BATTLEFIELD_SCORE()
-	flag_watcher()
-end

@@ -33,8 +33,11 @@ function Battlegrounds:SPELL_CAST_SUCCESS(...)
 	local caster  = select(3, ...);
    	local spellId = select(10, ...);
 	if HeroismIds[spellId] ~= nil then
-		print("Гера: "..caster.."-"..HeroismIds[spellId])
-		return
+		if IsPlayerFromBattlegroundRaid(caster) then
+			local spellLink, _ = GetSpellLink(spellId)
+			local message = "Героизм: "..caster.."-"..spellLink
+			print(message)
+		end
 	end
 	
 	if spellId == HunterTrap then 
@@ -178,45 +181,5 @@ function GetPlayerGroup(playerName)
 	end;
 
 	return "?"
-end
-
-function GetFullPlayerInfo(playerName)
-	local i, subgroup, name, playerClass
-	for i = 1, 40 do 
-
-		-- Returns information about a member of the player's raid
-		-- http://wowprogramming.com/docs/api/GetRaidRosterInfo
-		-- name - Name of the raid member (string)
-		-- rank - Rank of the member in the raid (number)
-		--     0 - Raid member
-		--     1 - Raid Assistant
-		--     2 - Raid Leader
-		-- subgroup - Index of the raid subgroup to which the member belongs (between 1 and MAX_RAID_GROUPS) (number)
-		-- level - Character level of the member (number)
-		-- class - Localized name of the member's class (string)
-		-- fileName - A non-localized token representing the member's class (string)
-		-- zone - Name of the zone in which the member is currently located (string)
-		-- online - 1 if the member is currently online; otherwise nil (1nil)
-		-- isDead - 1 if the member is currently dead; otherwise nil (1nil)
-		-- role - Group role assigned to the member (string)
-		--     MAINASSIST
-		--     MAINTANK
-		-- isML - 1 if the member is the master looter; otherwise nil (1nil)
-		name, _, subgroup=GetRaidRosterInfo(i);
-		if name == subgroup then 
-			return subgroup;
-		end;
-	end;
-
-	-- http://wowprogramming.com/docs/api/UnitClass
-	-- Returns a unit's class. The second return (classFileName) can be used for locale-independent verification of 
-	-- a unit's class, or to look up class-related data in various global tables:
-	-- RAID_CLASS_COLORS provides a standard color for each class (as seen in the default who, guild, calendar, and raid UIs)
-	-- CLASS_ICON_TCOORDS provides coordinates to locate each class' icon within the "Interface\Glues\CharacterCreate\UI-CharacterCreate-Classes" texture
-	playerClass ,_ = UnitClass(playerName);
-	
-	print(playerName)
-
-	return playerName .. " " .. playerClass .. " группа " .. subgroup
 end
 

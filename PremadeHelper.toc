@@ -4,9 +4,9 @@
 ## Version: 1.0
 embeds.xml
 localization\localization.ruRU.lua
+Helpers\Common.lua
 Helpers\Api.lua
 Helpers\Core.lua
-Helpers\Common.lua
 GlobalSettings.lua
 PremadeHelper.lua
 Battlegrounds\AlteracValley.lua

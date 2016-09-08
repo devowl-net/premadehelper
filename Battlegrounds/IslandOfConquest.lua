@@ -5,6 +5,7 @@ IoC = {}
 -- Системные переменные
 local gateHP = {}
 local LastPercents = 100;
+local IsBattlegroundGoing = false
 
 -- Константы
 local DEFAULT_INITIAL_GATE_HEALTH = 600000
@@ -31,21 +32,21 @@ function IsInInterval(left, right, currentValue)
 	return left < currentValue  and currentValue <= right;
 end
 
--- local test = { "1", "2", "5" }
--- test["7"] = "777"
--- 
--- print("----"..tostring(#test))
--- for key, value in pairs(test) do
---    print(key )
---    print(test[key])
---    print("+")
--- end
+function UpdateGoingState(inBattleground)
+	
+end
 
 do
 	IoC = Api.NewFrame(function()
+
 		if GetCurrentMapAreaID() == IoC.MapId then 
-			return true
+			if IsBattlegroundGoing == nil then
+				IsBattlegroundGoing = IsBattlegroundGoing();
+			end
+
+			return IsBattlegroundGoing == false
 		else
+			IsBattlegroundGoing = nil 
 			gateHP = {}
 			LastPercents = 100
 			return false
@@ -107,10 +108,9 @@ function IoC:SPELL_BUILDING_DAMAGE(_, sourceGUID, p8, damage, p6, destGUID, dest
 		return
 	end
 	
+	-- в константу
 	LastPercents = resultDamage
+
 	local gateHealth = __merge(destName, tostring(resultDamage).."%")
-	local message = Common:FormatInstanceMessage(gateHealth)
-	SendChatMessage(message, "INSTANCE_CHAT" )
-	--print(message);
-	--print("-> "..destName.." -> "..tostring(damagePercent).."%")
+	PHSayInstance(gateHealth)
 end
