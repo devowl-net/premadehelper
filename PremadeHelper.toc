@@ -16,3 +16,4 @@ Assistent\Raid.lua
 UI\Main\DataShow.xml
 UI\Main\DataShow.lua
 UI\Main\MinimapIcon.lua
+Assistent\QueuePop.lua

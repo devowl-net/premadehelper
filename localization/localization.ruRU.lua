@@ -51,13 +51,13 @@ _L.Marks = { [ "skull" ] = "{rt8}",
 
 _L.BaseStates =	{ 
 				  -- IoC
-				  [ "Баз атаковано"        ] = _L.Marks["square"],
-                  [ "Баз защищено"         ] = _L.Marks["square"],
+				  [ "Баз атаковано"        ] = "square",
+                  [ "Баз защищено"         ] = "square",
 				  -- AV
-				  [ "Штурмы кладбищ"    ] = _L.Marks["diamond"],
-                  [ "Оборона кладбищ"   ] = _L.Marks["diamond"],
-                  [ "Оборона башен"     ] = _L.Marks["square"],
-                  [ "Штурмы башен"      ] = _L.Marks["square"],
+				  [ "Штурмы кладбищ"    ] = "diamond",
+                  [ "Оборона кладбищ"   ] = "diamond",
+                  [ "Оборона башен"     ] = "square",
+                  [ "Штурмы башен"      ] = "square",
                 } ;
 
 -- Class talent specs

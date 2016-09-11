@@ -5,7 +5,7 @@ IoC = {}
 -- Системные переменные
 local gateHP = {}
 local LastPercents = 100;
-local IsBattlegroundGoing = false
+local _isBattlegroundGoing = false
 
 -- Константы
 local DEFAULT_INITIAL_GATE_HEALTH = 600000
@@ -32,28 +32,29 @@ function IsInInterval(left, right, currentValue)
 	return left < currentValue  and currentValue <= right;
 end
 
-function UpdateGoingState(inBattleground)
+function Del()
 	
 end
 
 do
 	IoC = Api.NewFrame(function()
-
 		if GetCurrentMapAreaID() == IoC.MapId then 
-			if IsBattlegroundGoing == nil then
-				IsBattlegroundGoing = IsBattlegroundGoing();
+			if _isBattlegroundGoing == nil then
+				RequestBattlefieldScoreData()
+				_isBattlegroundGoing = IsBattlegroundGoing();
 			end
 
-			return IsBattlegroundGoing == false
+			return _isBattlegroundGoing == false
 		else
-			IsBattlegroundGoing = nil 
+			_isBattlegroundGoing = nil 
 			gateHP = {}
 			LastPercents = 100
 			return false
 		end
 	end,
 	{
-		"SPELL_BUILDING_DAMAGE"
+		"SPELL_BUILDING_DAMAGE",
+		--"CHAT_MSG_BG_SYSTEM_NEUTRAL"
 	})
 	
 	IoC.MapId = TargetMapId

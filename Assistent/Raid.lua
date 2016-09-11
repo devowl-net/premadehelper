@@ -20,28 +20,8 @@ do
 end
 
 function AssistPromoter:GROUP_ROSTER_UPDATE(...)
-	local currentZone = GetCurrentMapAreaID()
 	
-	if (currentZone == IoC.MapId or currentZone == AV.MapId) then
-		-- Its Av or IoC now
-		self:Battleground40People()
-	elseif not IsInsidePvpZone() then
-		-- Its out of bg zone
-		BgPlayers = {}
-	else
-		-- Other battlegrounds or pvp zone for example
-	end
-end
-
-function AssistPromoter:Battleground40People()
-	for i=1, GetNumBattlefieldScores() do
-		local name, killingBlows, honorableKills, deaths, honorGained, faction, rank, race, class = GetBattlefieldScore(i);
-		
-		if BgPlayers[name] == nil then 
-		else
-			BgPlayers[name] = {}
-		end
-	end
+	-- Только для нормальных
 end
 
 function AssistPromoter:GetFraction()

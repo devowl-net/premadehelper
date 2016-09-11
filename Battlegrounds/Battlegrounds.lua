@@ -1,7 +1,13 @@
 ﻿print("Battleground module")
+
+-- Чекеры
 local Battlegrounds = nil
 local BattlegroundsTracker = nil
 local nextUpdateTime = nil
+
+-- Ливеры
+local BgPlayers = {}
+local RaidPlayers = {}
 
 -- Трапа раскидывающая рес
 local HunterTrap = 82939
@@ -23,28 +29,49 @@ end
 do
 	Battlegrounds = Api.NewFrame(AVIoCZone,
 		{
-			"SPELL_CAST_SUCCESS"
+			"SPELL_CAST_SUCCESS",
+			"SPELL_CAST_START"
 		})
 	
 	Battlegrounds:Subscribe()
 end
 
 function Battlegrounds:SPELL_CAST_SUCCESS(...)
-	local caster  = select(3, ...);
+	-- Ищим того кто дал геру
+	local casterPlayerName  = select(3, ...);
    	local spellId = select(10, ...);
 	if HeroismIds[spellId] ~= nil then
-		if IsPlayerFromBattlegroundRaid(caster) then
+		if IsPlayerFromBattlegroundRaid(casterPlayerName) then
 			local spellLink, _ = GetSpellLink(spellId)
-			local message = "Героизм: "..caster.."-"..spellLink
-			print(message)
+			local message = "Героизм: ["..GetShortPlayerName(casterPlayerName).."] "..spellLink
+			PHSayInstance(message, "square")
 		end
 	end
 	
+	-- Не актуально возможно с 7.0.3
 	if spellId == HunterTrap then 
 		--print("HunterTrap: "..caster)
 	end
 end
 
+function Battlegrounds:SPELL_CAST_START(...)
+	-- Уведомление о начале чека
+	local casterPlayerName  = select(3, ...);
+   	local spellId = select(10, ...);
+	local spellName = select(11, ...);
+	
+	if spellId == 97388 then
+		local resultName = spellName ..":  ".. GetShortPlayerName(name);
+		local message = resultName .. " группа [" .. GetPlayerGroup(name) .. "] ";
+		PHSay(message, mark)
+		print("ЧЕКАЕТ СЦУКО "..casterPlayerName)
+	end
+	-- print(casterPlayerName.." "..spellId)
+end
+
+--------------------------------------------------------------------------------------------------------
+--  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  
+--------------------------------------------------------------------------------------------------------
 do
 	BattlegroundsTracker = Api.NewFrame(function()
 		local rightZone = AVIoCZone()
@@ -60,10 +87,25 @@ do
 		return rightZone
 	end,
 	{
-		"UPDATE_BATTLEFIELD_SCORE"
+		"UPDATE_BATTLEFIELD_SCORE",
+		-- "GROUP_ROSTER_UPDATE"
 	})
 	
 	BattlegroundsTracker:Subscribe()
+end
+
+function BattlegroundsTracker:GROUP_ROSTER_UPDATE(...)
+	local currentZone = GetCurrentMapAreaID()
+	
+	if (currentZone == IoC.MapId or currentZone == AV.MapId) then
+		-- Its Av or IoC now
+		self:Battleground40People()
+	elseif not IsInsidePvpZone() then
+		-- Its out of bg zone
+		BgPlayers = {}
+	else
+		-- Other battlegrounds or pvp zone for example
+	end
 end
 
 function BattlegroundsTracker:UPDATE_BATTLEFIELD_SCORE(...)
@@ -122,9 +164,6 @@ function BattlegroundsTracker:UPDATE_BATTLEFIELD_SCORE(...)
 				-- in Alterac Valley, etc. For the name and icon associated with each statistic, see GetBattlefieldStatInfo(). 
 				-- For basic battleground score information, see GetBattlefieldScore().
 				local playerStatData = GetBattlefieldStatData(i, j);
-				-- if (Flags[name][j] == nil) then
-				--   Flags[name][j] = 0;
-				-- end
 				
 				-- Если человек что то захватил и изменилось значение в колонке
 				if (Flags[name][j] ~= nil and Flags[name][j] ~= playerStatData) then
@@ -139,10 +178,9 @@ function BattlegroundsTracker:UPDATE_BATTLEFIELD_SCORE(...)
 					if (_L.BaseStates[ stat_name ] ~= nil) then
 						
 						local mark = _L.BaseStates[ stat_name ]
-						local resultName = stat_name ..":  ".. name;
-						local message = mark.."[PH] " .. resultName .. " группа [" .. GetPlayerGroup(name) .. "] ".. mark;
-						SendChatMessage(message, "SAY" )
-						--print(mark.."[PH] CHECKER:" .. resultName .. mark)
+						local resultName = stat_name ..":  ".. GetShortPlayerName(name);
+						local message = resultName .. " группа [" .. GetPlayerGroup(name) .. "] ";
+						PHSay(message, mark)
 					end
 				end
 				
@@ -152,34 +190,23 @@ function BattlegroundsTracker:UPDATE_BATTLEFIELD_SCORE(...)
 	end
 end
 
-function GetPlayerGroup(playerName)
-	local i, subgroup, name
-	for i = 1, 40 do 
-
-		-- Returns information about a member of the player's raid
-		-- http://wowprogramming.com/docs/api/GetRaidRosterInfo
-		-- name - Name of the raid member (string)
-		-- rank - Rank of the member in the raid (number)
-		--     0 - Raid member
-		--     1 - Raid Assistant
-		--     2 - Raid Leader
-		-- subgroup - Index of the raid subgroup to which the member belongs (between 1 and MAX_RAID_GROUPS) (number)
-		-- level - Character level of the member (number)
-		-- class - Localized name of the member's class (string)
-		-- fileName - A non-localized token representing the member's class (string)
-		-- zone - Name of the zone in which the member is currently located (string)
-		-- online - 1 if the member is currently online; otherwise nil (1nil)
-		-- isDead - 1 if the member is currently dead; otherwise nil (1nil)
-		-- role - Group role assigned to the member (string)
-		--     MAINASSIST
-		--     MAINTANK
-		-- isML - 1 if the member is the master looter; otherwise nil (1nil)
-		name, _, subgroup=GetRaidRosterInfo(i);
-		if name == playerName then 
-			return subgroup;
-		end;
-	end;
-
-	return "?"
+function BattlegroundsTracker:Battleground40People()
+	-- Мониторим ливеров
+	for i=1, GetNumBattlefieldScores() do
+		local 
+			name, 
+			killingBlows, 
+			honorableKills, 
+			deaths, 
+			honorGained, 
+			faction, 
+			rank, 
+			race, 
+			class = GetBattlefieldScore(i);
+		
+		if BgPlayers[name] == nil then 
+		else
+			BgPlayers[name] = {}
+		end
+	end
 end
-

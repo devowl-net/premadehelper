@@ -15,6 +15,9 @@
     <OutputPath>.</OutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="Assistent\QueuePop.lua">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="Battlegrounds\AlteracValley.lua">
       <SubType>Code</SubType>
     </Content>
