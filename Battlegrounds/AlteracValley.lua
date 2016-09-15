@@ -37,7 +37,7 @@ function AV:CHAT_MSG_MONSTER_YELL(message, sender)
 	end
 
 	if underAttackMessage ~= nil then
-		PHSayInstance(underAttackMessage)
+		PHSay(underAttackMessage)
 	end
 end
 

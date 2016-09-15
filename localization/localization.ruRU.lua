@@ -6,6 +6,9 @@ print("Localization ruRU")
 
 _L = {};
 
+_L["IoCBattlefieldBegins"] = "Битва началась!"
+_L["AVBattlefieldBegins"] = "Битва за Альтеракскую долину началась!"
+
 _L["Drektar"		] = "Дрек'Тар"
 _L["Vandar"			] = "Вандар Грозовая Вершина"
 _L["UnderAttack"	] = "Атакован"

@@ -5,7 +5,6 @@ IoC = {}
 -- Системные переменные
 local gateHP = {}
 local LastPercents = 100;
-local _isBattlegroundGoing = false
 
 -- Константы
 local DEFAULT_INITIAL_GATE_HEALTH = 600000
@@ -32,37 +31,28 @@ function IsInInterval(left, right, currentValue)
 	return left < currentValue  and currentValue <= right;
 end
 
-function Del()
-	
-end
-
 do
 	IoC = Api.NewFrame(function()
-		if GetCurrentMapAreaID() == IoC.MapId then 
-			if _isBattlegroundGoing == nil then
-				RequestBattlefieldScoreData()
-				_isBattlegroundGoing = IsBattlegroundGoing();
-			end
-
-			return _isBattlegroundGoing == false
-		else
-			_isBattlegroundGoing = nil 
-			gateHP = {}
-			LastPercents = 100
-			return false
-		end
+		return true
 	end,
 	{
 		"SPELL_BUILDING_DAMAGE",
-		--"CHAT_MSG_BG_SYSTEM_NEUTRAL"
+		"CHAT_MSG_BG_SYSTEM_NEUTRAL",
+		"PLAYER_ENTERING_WORLD",
+		"UPDATE_BATTLEFIELD_SCORE"
 	})
 	
 	IoC.MapId = TargetMapId
 
 	IoC:Subscribe()
+	IoC.IsEnabled = nil
 end
 
 function IoC:SPELL_BUILDING_DAMAGE(_, sourceGUID, p8, damage, p6, destGUID, destName, p5, p4, p3, p2, p1, damage)
+	if not IoC.IsEnabled then
+		return
+	end
+
 	if sourceGUID == nil or destName == nil or destGUID == nil or damage == nil then
 		return
 	end
@@ -114,4 +104,40 @@ function IoC:SPELL_BUILDING_DAMAGE(_, sourceGUID, p8, damage, p6, destGUID, dest
 
 	local gateHealth = __merge(destName, tostring(resultDamage).."%")
 	PHSayInstance(gateHealth)
+end
+
+function IoC:PLAYER_ENTERING_WORLD()
+	if GetCurrentMapAreaID() == IoC.MapId then 
+		-- http://wowwiki.wikia.com/wiki/API_RequestBattlefieldScoreData
+		-- Requests the lastest battlefield score data from the server
+		--		RequestBattlefieldScoreData()
+		-- Used to retrieve the latest score info from the server, the 
+		-- data is not received as soon as you call this you will need 
+		-- to register and wait for UPDATE_BATTLEFIELD_SCORE. 
+		RequestBattlefieldScoreData()
+	else
+		IoC.IsEnabled = nil
+		gateHP = {}
+		LastPercents = 100
+	end
+end
+-- IoC.IsEnabled = IsBattlegroundGoing();
+function IoC:UPDATE_BATTLEFIELD_SCORE()
+	if IoC.IsEnabled ~= nil or GetCurrentMapAreaID() ~= IoC.MapId then
+		return
+	end
+
+	local bgPlayers = GetNumBattlefieldScores()
+	if (bgPlayers <= 15) then
+		return
+	end
+	
+	local isGoing = IsBattlegroundGoing();
+	if isGoing ~= nil then
+		IoC.IsEnabled = not isGoing
+	end
+end
+
+function IoC:CHAT_MSG_BG_SYSTEM_NEUTRAL(message)
+	print("MESSAGE: "..message)
 end

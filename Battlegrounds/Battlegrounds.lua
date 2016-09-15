@@ -21,9 +21,12 @@ HeroismIds =
   [102351] = "Барабаны ярости"
 };
 
+-- Зона Альта и Острова
 function AVIoCZone()
 	local currentZone = GetCurrentMapAreaID()
-	return currentZone == IoC.MapId or currentZone == AV.MapId
+	return 
+		currentZone == 540 or 
+		currentZone == 401
 end
 
 do
@@ -55,17 +58,18 @@ function Battlegrounds:SPELL_CAST_SUCCESS(...)
 end
 
 function Battlegrounds:SPELL_CAST_START(...)
+	-- На ОЗ и Альтераке событие не приходит
 	-- Уведомление о начале чека
-	local casterPlayerName  = select(3, ...);
-   	local spellId = select(10, ...);
-	local spellName = select(11, ...);
-	
-	if spellId == 97388 then
-		local resultName = spellName ..":  ".. GetShortPlayerName(name);
-		local message = resultName .. " группа [" .. GetPlayerGroup(name) .. "] ";
-		PHSay(message, mark)
-		print("ЧЕКАЕТ СЦУКО "..casterPlayerName)
-	end
+	--local casterPlayerName  = select(3, ...);
+	--  	local spellId = select(10, ...);
+	--local spellName = select(11, ...);
+
+	--if spellId == 97388 then
+	--	local resultName = spellName ..":  ".. GetShortPlayerName(name);
+	--	local message = resultName .. " группа [" .. GetPlayerGroup(name) .. "] ";
+	--	PHSay(message, mark)
+	--	print("ЧЕКАЕТ СЦУКО "..casterPlayerName)
+	--end
 	-- print(casterPlayerName.." "..spellId)
 end
 
@@ -110,7 +114,7 @@ end
 
 function BattlegroundsTracker:UPDATE_BATTLEFIELD_SCORE(...)
 	
-	if (nextUpdateTime > time()) then
+	if (nextUpdateTime == nil or nextUpdateTime > time()) then
 		-- Если еще не настало время следующего обновления
 		return
 	end
@@ -178,8 +182,8 @@ function BattlegroundsTracker:UPDATE_BATTLEFIELD_SCORE(...)
 					if (_L.BaseStates[ stat_name ] ~= nil) then
 						
 						local mark = _L.BaseStates[ stat_name ]
-						local resultName = stat_name ..":  ".. GetShortPlayerName(name);
-						local message = resultName .. " группа [" .. GetPlayerGroup(name) .. "] ";
+						local resultName = stat_name ..": ".. GetShortPlayerName(name);
+						local message = resultName .. " group [" .. GetPlayerGroup(name) .. "] ";
 						PHSay(message, mark)
 					end
 				end
