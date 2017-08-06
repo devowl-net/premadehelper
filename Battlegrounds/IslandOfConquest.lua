@@ -71,8 +71,16 @@ function IoC:SPELL_BUILDING_DAMAGE(_, sourceGUID, p8, damage, p6, destGUID, dest
 		gateHP[guid] = 0
 	end
 
+	local fraction;
+	
+	-- faction played, 0 for horde, 1 for alliance
+	if GetBattlefieldArenaFaction() == 0 then
+		fraction = _L["IoCHorde"]
+	else
+		faction = _L["IoCAlliance"]
+	end
 
-	local hordeWarning = string.find(destName, _L["IoCHorde"]) ~= nil
+	local hordeWarning = string.find(destName, faction) ~= nil
 	if not hordeWarning then 
 		return
 	end

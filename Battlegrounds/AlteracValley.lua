@@ -30,10 +30,12 @@ function AV:CHAT_MSG_MONSTER_YELL(message, sender)
 	if message == nil or sender == nil then return end
 	
 	local underAttackMessage = nil
-	if sender == _L["Drektar"] then 
+	if sender == _L["Drektar"] and GetBattlefieldArenaFaction() == 0 then 
 		underAttackMessage = __merge(_L["Drektar"], _L["UnderAttack"])
-	elseif sender == _L["Vandar"] then
-		-- underAttackMessage = __merge(_L["Vandar"], _L["UnderAttack"])
+	end
+
+	if sender == _L["Vandar"] and GetBattlefieldArenaFaction() == 1 then
+		underAttackMessage = __merge(_L["Vandar"], _L["UnderAttack"])
 	end
 
 	if underAttackMessage ~= nil then

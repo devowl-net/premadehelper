@@ -47,7 +47,7 @@ function Battlegrounds:SPELL_CAST_SUCCESS(...)
 		if IsPlayerFromBattlegroundRaid(casterPlayerName) then
 			local spellLink, _ = GetSpellLink(spellId)
 			local message = "Героизм: ["..GetShortPlayerName(casterPlayerName).."] "..spellLink
-			PHSayInstance(message, "square")
+			PHSay(message, "square")
 		end
 	end
 	
@@ -148,8 +148,8 @@ function BattlegroundsTracker:UPDATE_BATTLEFIELD_SCORE(...)
 			race, 
 			class = GetBattlefieldScore(i);
 		
-		-- Валидная фракция и валидное имя. 0 - орда
-		if name and faction and faction == 0 then
+		-- Валидная фракция и валидное имя. 0 - орда 1 - альянс
+		if name and faction and faction == GetBattlefieldArenaFaction() then
 			
 			-- http://wowprogramming.com/docs/api/GetNumBattlefieldStats
 			-- Returns the number of battleground-specific statistics on the current battleground's 

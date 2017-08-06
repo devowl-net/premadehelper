@@ -7,9 +7,9 @@
     <ProjectGuid>{2d7755b7-74ef-4539-ab17-99e22e44ea41}</ProjectGuid>
     <AssemblyName>PremadeHelper</AssemblyName>
     <RootNamespace>PremadeHelper</RootNamespace>
-    <DeployBasePath>E:\Games\World of Warcraft</DeployBasePath>
-    <RuntimePath>E:\Games\World of Warcraft</RuntimePath>
-    <WowPath>E:\Games\World of Warcraft</WowPath>
+    <DeployBasePath>D:\Games\World of Warcraft</DeployBasePath>
+    <RuntimePath>D:\Games\World of Warcraft</RuntimePath>
+    <WowPath>D:\Games\World of Warcraft</WowPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Default' ">
     <OutputPath>.</OutputPath>
