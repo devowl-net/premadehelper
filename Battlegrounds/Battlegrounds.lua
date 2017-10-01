@@ -21,6 +21,7 @@ HeroismIds =
   [146555] = "Барабаны ярости"
 };
 
+-- ObjectiveTrackerFrame:Hide() при заходе
 -- Зона Альта и Острова
 function AVIoCZone()
 	local currentZone = GetCurrentMapAreaID()
@@ -28,6 +29,21 @@ function AVIoCZone()
 		currentZone == 540 or 
 		currentZone == 401
 end
+
+local total = 0
+ 
+local function onUpdate(self,elapsed)
+    total = total + elapsed
+    if total >= 5 then
+		if AVIoCZone() then
+			RequestBattlefieldScoreData()
+		end
+        total = 0
+    end
+end
+ 
+local f = CreateFrame("frame")
+f:SetScript("OnUpdate", onUpdate)
 
 do
 	Battlegrounds = Api.NewFrame(AVIoCZone,

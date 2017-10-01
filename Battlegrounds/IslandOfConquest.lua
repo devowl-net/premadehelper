@@ -18,7 +18,7 @@ HordeDamageFlow[5 ] = { Left = 0, Right = 5 }
 HordeDamageFlow[10] = { Left = 5, Right = 10 }
 HordeDamageFlow[15] = { Left = 10, Right = 15 }
 HordeDamageFlow[20] = { Left = 15, Right = 20 }
-HordeDamageFlow[25] = { Left = 20, Right = 25 }
+HordeDamageFlow[25] = { Left = 20, Right = 25, IsWarning = true }
 HordeDamageFlow[30] = { Left = 25, Right = 30 }
 HordeDamageFlow[40] = { Left = 30, Right = 40 }
 HordeDamageFlow[50] = { Left = 40, Right = 50 }
@@ -86,12 +86,14 @@ function IoC:SPELL_BUILDING_DAMAGE(_, sourceGUID, p8, damage, p6, destGUID, dest
 	end
 
 	local damagePercent = math.floor(gateHP[guid] / (DEFAULT_INITIAL_GATE_HEALTH / 100)) -- 56, 79, 98
-
+	
+	local isWarning = false
 	local resultDamage = nil
 	for key, _ in pairs(HordeDamageFlow) do
 		local node = HordeDamageFlow[key]
 		if IsInInterval(node.Left, node.Right, damagePercent) then
 			resultDamage = key
+			isWarning = node.IsWarning
 			break
 		end
 	end
@@ -112,6 +114,10 @@ function IoC:SPELL_BUILDING_DAMAGE(_, sourceGUID, p8, damage, p6, destGUID, dest
 
 	local gateHealth = __merge(destName, tostring(resultDamage).."%")
 	PHSayInstance(gateHealth)
+
+	if isWarning then
+		PHSayInstance(gateHealth, nil, true)
+	end
 end
 
 function IoC:PLAYER_ENTERING_WORLD()
