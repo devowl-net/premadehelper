@@ -4,7 +4,7 @@
 local Battlegrounds = nil
 local BattlegroundsTracker = nil
 local nextUpdateTime = nil
-
+local CountLeft = 0
 -- Ливеры
 local BgPlayers = {}
 local RaidPlayers = {}
@@ -101,6 +101,8 @@ do
 			end
 		else
 			Flags =  {};
+			CountLeft = 0;
+			BgPlayers = {}
 			nextUpdateTime = nil
 		end
 		
@@ -108,7 +110,6 @@ do
 	end,
 	{
 		"UPDATE_BATTLEFIELD_SCORE",
-		-- "GROUP_ROSTER_UPDATE"
 	})
 	
 	BattlegroundsTracker:Subscribe()
@@ -121,8 +122,7 @@ function BattlegroundsTracker:GROUP_ROSTER_UPDATE(...)
 		-- Its Av or IoC now
 		self:Battleground40People()
 	elseif not IsInsidePvpZone() then
-		-- Its out of bg zone
-		BgPlayers = {}
+
 	else
 		-- Other battlegrounds or pvp zone for example
 	end
@@ -137,8 +137,8 @@ function BattlegroundsTracker:UPDATE_BATTLEFIELD_SCORE(...)
 	
 	nextUpdateTime = time() + 4
 
-	local bgPlayers = GetNumBattlefieldScores()
-	if (bgPlayers <= 15) then
+	local numScores = GetNumBattlefieldScores()
+	if (numScores <= 15) then
 		return
 	end
 	
@@ -151,7 +151,7 @@ function BattlegroundsTracker:UPDATE_BATTLEFIELD_SCORE(...)
 	SetBattlefieldScoreFaction(nil);
 	
 	local i, j
-	for i = 1, bgPlayers do
+	for i = 1, numScores do
 
 		-- http://wowprogramming.com/docs/api/GetBattlefieldScore
 		local name, 
@@ -208,25 +208,58 @@ function BattlegroundsTracker:UPDATE_BATTLEFIELD_SCORE(...)
 			end
 		end
 	end
+
+	BattlegroundsTracker.Battleground40People()
 end
 
 function BattlegroundsTracker:Battleground40People()
+	
+	local myFaction = GetBattlefieldArenaFaction();
+	local currentSeconds = GetSeconds()
+	local numScores = GetNumBattlefieldScores();
+	
+	-- Returns basic scoreboard information for a battleground/arena participant. Does not include 
+	-- battleground-specific score data (e.g. flags captured in Warsong Gulch, towers assaulted in Alterac Valley, etc)
 	-- Мониторим ливеров
-	for i=1, GetNumBattlefieldScores() do
+	for i=1, numScores do
 		local 
 			name, 
 			killingBlows, 
 			honorableKills, 
 			deaths, 
 			honorGained, 
-			faction, 
-			rank, 
-			race, 
-			class = GetBattlefieldScore(i);
+			faction = GetBattlefieldScore(i);
 		
-		if BgPlayers[name] == nil then 
-		else
-			BgPlayers[name] = {}
+		-- 0 - Horde (Battleground) / Green Team (Arena)
+		-- 1 - Alliance (Battleground) / Gold Team (Arena)
+		if myFaction ~= faction and name ~= nil then 
+
+			if BgPlayers[name] == nil then
+				local container = {}
+				container.check_count = 0
+				BgPlayers[name] = container
+			end
+
+			BgPlayers[name].last_seen = currentSeconds
+		end
+	end
+
+	for name, _ in pairs(BgPlayers) do
+		local item = BgPlayers[name]
+		if item ~= nil then
+			if item.check_count >= 1 and item.last_seen ~= currentSeconds then
+
+				CountLeft = CountLeft + 1
+				
+				if CountLeft % 3 == 0 then
+					local message = __tostring(CountLeft).." enemies left"
+					PHSay(message, "skull")
+				end
+
+				BgPlayers[name] = nil
+			end
+
+			item.check_count = item.check_count + 1
 		end
 	end
 end
