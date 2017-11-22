@@ -1,0 +1,44 @@
+<Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
+	<Script file="TextWindow.lua" />
+	<Frame name="TextWindow" inherits="ButtonFrameTemplate" parent="UIParent" toplevel="true">
+		<Size>
+			<AbsDimension x="200" y="200" />
+		</Size>
+		<Anchors>
+			<Anchor point="TOPLEFT">
+				<Offset>
+					<AbsDimension x="100" y="-150" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+			<BackgroundInsets>
+				<AbsInset left="11" right="12" top="12" bottom="11" />
+			</BackgroundInsets>
+			<TileSize>
+				<AbsValue val="32" />
+			</TileSize>
+			<EdgeSize>
+				<AbsValue val="32" />
+			</EdgeSize>
+		</Backdrop>
+	</Frame>
+	<GameTooltip name="$parentTooltip" parentKey="Tooltip" inherits="GameTooltipTemplate">
+		<Anchors>
+			<Anchor point="TOPLEFT" relativeKey="$parent.Icon" relativePoint="TOPRIGHT" x="0" y="10" />
+		</Anchors>
+		<Scripts>
+			<OnLoad inherit="prepend">
+				self:SetBackdrop(nil);
+			</OnLoad>
+			<OnSizeChanged>
+				local itemTooltipExtraBorderHeight = 22;
+				self:GetParent():SetSize(self:GetWidth() + self:GetParent().Icon:GetWidth(), self:GetHeight() - itemTooltipExtraBorderHeight);
+			</OnSizeChanged>
+			<OnTooltipSetItem>
+				local embeddedItemTooltip = self:GetParent();
+				EmbeddedItemTooltip_OnTooltipSetItem(embeddedItemTooltip);
+			</OnTooltipSetItem>
+		</Scripts>
+	</GameTooltip>
+</Ui>

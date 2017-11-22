@@ -5,9 +5,11 @@ local Battlegrounds = nil
 local BattlegroundsTracker = nil
 local nextUpdateTime = nil
 local CountLeft = 0
+
 -- Ливеры
 local BgPlayers = {}
 local RaidPlayers = {}
+local LastSeenPlayers = {}
 
 -- Трапа раскидывающая рес
 local HunterTrap = 82939
@@ -89,6 +91,12 @@ function Battlegrounds:SPELL_CAST_START(...)
 	-- print(casterPlayerName.." "..spellId)
 end
 
+function Reset()
+	Flags =  {};
+	CountLeft = 0;
+	BgPlayers = {}
+	nextUpdateTime = nil
+end
 --------------------------------------------------------------------------------------------------------
 --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  --  
 --------------------------------------------------------------------------------------------------------
@@ -100,19 +108,24 @@ do
 				nextUpdateTime = time() + 4
 			end
 		else
-			Flags =  {};
-			CountLeft = 0;
-			BgPlayers = {}
-			nextUpdateTime = nil
+			Reset()
 		end
 		
 		return rightZone
 	end,
 	{
 		"UPDATE_BATTLEFIELD_SCORE",
+		"PLAYER_ENTERING_WORLD"
 	})
 	
 	BattlegroundsTracker:Subscribe()
+end
+
+function BattlegroundsTracker:PLAYER_ENTERING_WORLD(...)
+
+	if not IsInsidePvpZone() then
+		Reset()
+	end
 end
 
 function BattlegroundsTracker:GROUP_ROSTER_UPDATE(...)
@@ -122,7 +135,7 @@ function BattlegroundsTracker:GROUP_ROSTER_UPDATE(...)
 		-- Its Av or IoC now
 		self:Battleground40People()
 	elseif not IsInsidePvpZone() then
-
+		
 	else
 		-- Other battlegrounds or pvp zone for example
 	end
@@ -238,6 +251,8 @@ function BattlegroundsTracker:Battleground40People()
 				local container = {}
 				container.check_count = 0
 				BgPlayers[name] = container
+				
+				AddLastSeen(name)
 			end
 
 			BgPlayers[name].last_seen = currentSeconds
@@ -262,4 +277,9 @@ function BattlegroundsTracker:Battleground40People()
 			item.check_count = item.check_count + 1
 		end
 	end
+end
+
+function AddLastSeen(name)
+	LastSeenPlayers[name] = {}
+	LastSeenPlayers[name].last_seen = GetServerTime()
 end

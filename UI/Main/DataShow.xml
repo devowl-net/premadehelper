@@ -3,7 +3,7 @@
 	<Path />
 	<Frame name="DataShow" inherits="TooltipBorderedFrameTemplate" hidden="true" parent="UIParent" toplevel="true" movable="true" clampedToScreen="true">
 		<Size>
-			<AbsDimension x="262" y="369" />
+			<AbsDimension x="420" y="430" />
 		</Size>
 		<Anchors>
 			<Anchor point="TOPLEFT">
@@ -23,9 +23,9 @@
 		</Backdrop>
 		<Frames>
 			<Frame name="tabControl" inherits="TabardFrameCustomizeTemplate" parent="DataShow">
-				<Size x="247" y="316" />
+				<Size x="400" y="340" />
 				<Anchors>
-					<Anchor point="TOPLEFT" x="8" y="-46" />
+					<Anchor point="TOPLEFT" x="8" y="-87" />
 				</Anchors>
 				<Backdrop bgFile="" edgeFile="" tile="true">
 					<BackgroundInsets>
@@ -35,8 +35,8 @@
 					<EdgeSize val="1" />
 				</Backdrop>
 			</Frame>
-			<CheckButton name="cbEnabled" inherits="UICheckButtonTemplate" parent="DataShow" text="">
-				<Size x="29" y="32" />
+			<CheckButton name="cbEnabled" inherits="UICheckButtonTemplate" parent="DataShow" text="On\Off">
+				<Size x="93" y="44" />
 				<Anchors>
 					<Anchor point="TOPLEFT" x="14" y="-8" />
 				</Anchors>
@@ -45,6 +45,17 @@
 					<Color r="1" g="1" b="0" />
 				</ButtonText>
 			</CheckButton>
+			<Button name="bCopyLastHourPlayers" inherits="UIPanelButtonTemplate" text="1H Players">
+				<Size x="89" y="32" />
+				<Anchors>
+					<Anchor point="TOPLEFT" x="305" y="-20" />
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						bCopyLastHourPlayers_OnClick()
+					</OnClick>
+				</Scripts>
+			</Button>
 		</Frames>
 		<Scripts>
 			<OnDragStart>

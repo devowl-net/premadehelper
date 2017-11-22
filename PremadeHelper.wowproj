@@ -7,9 +7,6 @@
     <ProjectGuid>{2d7755b7-74ef-4539-ab17-99e22e44ea41}</ProjectGuid>
     <AssemblyName>PremadeHelper</AssemblyName>
     <RootNamespace>PremadeHelper</RootNamespace>
-    <DeployBasePath>D:\Games\World of Warcraft</DeployBasePath>
-    <RuntimePath>D:\Games\World of Warcraft</RuntimePath>
-    <WowPath>D:\Games\World of Warcraft</WowPath>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Default' ">
     <OutputPath>.</OutputPath>
@@ -58,6 +55,13 @@
       <SubType>Code</SubType>
     </Content>
     <Content Include="TODO.txt" />
+    <Content Include="UI\Controls\TextWindow.lua">
+      <SubType>Code</SubType>
+      <DependentUpon>UI\Controls\TextWindow.xml</DependentUpon>
+    </Content>
+    <Content Include="UI\Controls\TextWindow.xml">
+      <SubType>Frame</SubType>
+    </Content>
     <Content Include="UI\Main\DataShow.lua">
       <SubType>Code</SubType>
       <DependentUpon>UI\Main\DataShow.xml</DependentUpon>
