@@ -1,15 +1,13 @@
-﻿local addon = PremadeHelper --LibStub("AceAddon-3.0"):NewAddon("PremadeHelper", "AceConsole-3.0")
+﻿local addon = PremadeHelper
 local icon = LibStub("LibDBIcon-1.0")
 
-function addon:OnMinimapButtonClick()
-	
-end
-
-local PremadeLDB = LibStub("LibDataBroker-1.1"):NewDataObject("PHObject", {
+local PremadeLDB = LibStub("LibDataBroker-1.1"):NewDataObject("PHObject", 
+{
 	type = "launcher",
 	text = "Premade Helper",
 	icon = "Interface\\ICONS\\spell_nature_bloodlust",
 	OnClick = function(self, button)
+
 		-- Minimap icon click
 		if DataShow:IsVisible() then
 			DataShow:Hide()
@@ -21,6 +19,7 @@ local PremadeLDB = LibStub("LibDataBroker-1.1"):NewDataObject("PHObject", {
 		tooltip:AddLine("[PH] Premade Helper");
 		--Add text here. The first line is ALWAYS a "header" type.
 		--It will appear slightly larger than subsequent lines of text
+		print("Show tooltip")
 	end,
 })
 
@@ -36,12 +35,3 @@ function addon:OnInitialize()
 	icon:Register("PHObject", PremadeLDB, self.db.profile.minimap)
 	--self:RegisterChatCommand("bunnies", "CommandTheBunnies")
 end
-
---function addon:CommandTheBunnies()
---	self.db.profile.minimap.hide = not self.db.profile.minimap.hide
---	if self.db.profile.minimap.hide then
---		icon:Hide("Bunnies!")
---	else
---		icon:Show("Bunnies!")
---	end
---end

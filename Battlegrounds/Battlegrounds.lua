@@ -64,7 +64,7 @@ function Battlegrounds:SPELL_CAST_SUCCESS(...)
 	if HeroismIds[spellId] ~= nil then
 		if IsPlayerFromBattlegroundRaid(casterPlayerName) then
 			local spellLink, _ = GetSpellLink(spellId)
-			local message = "Героизм: ["..GetShortPlayerName(casterPlayerName).."] "..spellLink
+			local message = "ГЕРА: ["..GetShortPlayerName(casterPlayerName).."] group ".. GetPlayerGroup(casterPlayerName) ..spellLink
 			PHSay(message, "square")
 		end
 	end
@@ -266,10 +266,10 @@ function BattlegroundsTracker:Battleground40People()
 
 				CountLeft = CountLeft + 1
 				
-				if CountLeft % 3 == 0 then
+				--if CountLeft % 2 == 0 then
 					local message = __tostring(CountLeft).." enemies left"
 					PHSay(message, "skull")
-				end
+				--end
 
 				BgPlayers[name] = nil
 			end
