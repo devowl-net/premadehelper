@@ -71,11 +71,11 @@ function IoC:SPELL_BUILDING_DAMAGE(_, sourceGUID, p8, damage, p6, destGUID, dest
 		gateHP[guid] = 0
 	end
 
-	local fraction;
+	local faction;
 	
 	-- faction played, 0 for horde, 1 for alliance
 	if GetBattlefieldArenaFaction() == 0 then
-		fraction = _L["IoCHorde"]
+		faction = _L["IoCHorde"]
 	else
 		faction = _L["IoCAlliance"]
 	end

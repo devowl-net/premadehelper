@@ -67,30 +67,30 @@ _L.BaseStates =	{
                 } ;
 
 -- Class talent specs
-local DK    = { ["Кровь"]              = "Tank",
+local DK    = { ["Кровь"]              = "Melee",
                 ["Лед"]                = "Melee",
                 ["Нечестивость"]       = "Melee",
               } ;
-local DRUID = { ["Баланс"]             = "Knockback",
+local DRUID = { ["Баланс"]             = "Ranged",
                 ["Сила зверя"]         = "Melee",
                 ["Исцеление"]          = "Healer",
-                ["Страж"]              = "Tank",
+                ["Страж"]              = "Melee",
               } ;
 local HUNTER = {
-                ["Повелитель зверей"]  = "Knockback",
+                ["Повелитель зверей"]  = "Ranged",
                 ["Стрельба"]           = "Ranged",
                 ["Выживание"]          = "Ranged",
                } ;
-local MAGE = {  ["Тайная магия"]       = "Knockback",
+local MAGE = {  ["Тайная магия"]       = "Ranged",
                 ["Огонь"]              = "Ranged",
                 ["Лед"]                = "Ranged",
              } ; 
-local MONK = {  ["Хмелевар"]           = "Tank",
+local MONK = {  ["Хмелевар"]           = "Melee",
                 ["Ткач туманов"]       = "Healer",
                 ["Танцующий с ветром"] = "Melee",
              } ; 
 local PALADIN = { ["Свет"]             = "Healer",
-                  ["Защита"]           = "Tank",
+                  ["Защита"]           = "Melee",
                   ["Воздаяние"]        = "Melee",
                 } ; 
 local PRIEST = { ["Послушание"]        = "Healer",
@@ -101,18 +101,23 @@ local ROGUE = { ["Ликвидация"]         = "Melee",
                 ["Бой"]                = "Melee",
                 ["Скрытность"]         = "Melee",
               } ; 
-local SHAMAN = { ["Стихии"]            = "Knockback",
+local SHAMAN = { ["Стихии"]            = "Ranged",
                  ["Совершенствование"] = "Melee",
                  ["Исцеление"]         = "Healer",
                } ; 
-local WARLOCK = { ["Колдовство"]       = "Knockback",
-                  ["Демонология"]      = "Knockback",
-                  ["Разрушение"]       = "Knockback",
+local WARLOCK = { ["Колдовство"]       = "Ranged",
+                  ["Демонология"]      = "Ranged",
+                  ["Разрушение"]       = "Ranged",
                 } ; 
 local WARRIOR = { ["Оружие"]           = "Melee",
                   ["Неистовство"]      = "Melee",
-                  ["Защита"]           = "Tank",
+                  ["Защита"]           = "Melee",
                 } ; 
+
+local DEMONHUNTER = { 
+				  ["Истребление"]	   = "Melee",
+                  ["Месть"]			   = "Melee",
+				};
 
 _L.BgRoles = {}
 _L.BgRoles["DEATHKNIGHT" ] = DK ;
@@ -126,4 +131,5 @@ _L.BgRoles["ROGUE"       ] = ROGUE ;
 _L.BgRoles["SHAMAN"      ] = SHAMAN ;
 _L.BgRoles["WARLOCK"     ] = WARLOCK ;
 _L.BgRoles["WARRIOR"     ] = WARRIOR ;
+_L.BgRoles["DEMONHUNTER" ] = DEMONHUNTER;
 

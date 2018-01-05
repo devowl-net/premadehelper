@@ -53,7 +53,7 @@ do
 			"SPELL_CAST_SUCCESS",
 			"SPELL_CAST_START"
 		})
-	
+
 	Battlegrounds:Subscribe()
 end
 
@@ -133,11 +133,12 @@ function BattlegroundsTracker:GROUP_ROSTER_UPDATE(...)
 	
 	if (currentZone == IoC.MapId or currentZone == AV.MapId) then
 		-- Its Av or IoC now
-		self:Battleground40People()
+		
 	elseif not IsInsidePvpZone() then
 		
 	else
 		-- Other battlegrounds or pvp zone for example
+		self:Battleground40People()
 	end
 end
 
@@ -231,6 +232,7 @@ function BattlegroundsTracker:Battleground40People()
 	local currentSeconds = GetSeconds()
 	local numScores = GetNumBattlefieldScores();
 	
+	-- Belrock-Todeswache 0 27 3 115 0 Эльф крови Охотник на демонов DEMONHUNTER 13607119 601879 0 0 0 0 Истребление 4
 	-- Returns basic scoreboard information for a battleground/arena participant. Does not include 
 	-- battleground-specific score data (e.g. flags captured in Warsong Gulch, towers assaulted in Alterac Valley, etc)
 	-- Мониторим ливеров
@@ -241,15 +243,27 @@ function BattlegroundsTracker:Battleground40People()
 			honorableKills, 
 			deaths, 
 			honorGained, 
-			faction = GetBattlefieldScore(i);
+			faction,
+			_,
+			class,
+			classToken,
+			_,
+			_,
+			_,
+			_,
+			_,
+			_,
+			talentSpec = GetBattlefieldScore(i);
 		
 		-- 0 - Horde (Battleground) / Green Team (Arena)
 		-- 1 - Alliance (Battleground) / Gold Team (Arena)
 		if myFaction ~= faction and name ~= nil then 
 
 			if BgPlayers[name] == nil then
+
 				local container = {}
 				container.check_count = 0
+				container.role = GetPlayerRole(classToken, talentSpec)
 				BgPlayers[name] = container
 				
 				AddLastSeen(name)
@@ -266,10 +280,8 @@ function BattlegroundsTracker:Battleground40People()
 
 				CountLeft = CountLeft + 1
 				
-				--if CountLeft % 2 == 0 then
-					local message = __tostring(CountLeft).." enemies left"
-					PHSay(message, "skull")
-				--end
+				local message = __tostring(CountLeft).." enemies left ["..__tostring(item.role).."]"
+				PHSay(message, "skull")
 
 				BgPlayers[name] = nil
 			end
