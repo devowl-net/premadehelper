@@ -280,7 +280,11 @@ function BattlegroundsTracker:Battleground40People()
 
 				CountLeft = CountLeft + 1
 				
-				local message = __tostring(CountLeft).." enemies left ["..__tostring(item.role).."]"
+				local message = __tostring(CountLeft).." enemies left"
+				
+				if item.role == "Healer" then
+					message = message.." [{rt5} Healer: "..name.."]"
+				end
 				PHSay(message, "skull")
 
 				BgPlayers[name] = nil
