@@ -1,11 +1,11 @@
 ﻿print("Raid module")
-local AssistPromoter = nil
+local Raid = nil
 
 local BgPlayers = {}
 local RaidPlayers = {}
 
 do
-	AssistPromoter = Api.NewFrame(function()
+	Raid = Api.NewFrame(function()
 
 		-- ВВВВВВВВЫЫЫЫЫЫЫЫЫККККККККККЛЛЛЛЛЛЛЛЮЮЮЮЮЮЮЮЧЧЧЧЧЧЧЧИИИИИИИИЛЛЛЛЛЛЛЛ
 		return false;
@@ -16,18 +16,18 @@ do
 		"GROUP_ROSTER_UPDATE"
 	})
 
-	AssistPromoter:Subscribe()
+	Raid:Subscribe()
 end
 
-function AssistPromoter:GROUP_ROSTER_UPDATE(...)
+function Raid:GROUP_ROSTER_UPDATE(...)
 	
 	-- Только для нормальных
 end
 
-function AssistPromoter:GetFraction()
+function Raid:GetFraction()
 
-	if AssistPromoter["Fraction"] ~= nil then
-		return AssistPromoter["Fraction"]
+	if Raid["Fraction"] ~= nil then
+		return Raid["Fraction"]
 	end
 
 	local unit = "player"
@@ -43,9 +43,9 @@ function AssistPromoter:GetFraction()
 	end
 
 	--return sideNumber, englishFaction, localizedFaction
-	AssistPromoter["Fraction"] = sideNumber, englishFaction, localizedFaction
+	Raid["Fraction"] = sideNumber, englishFaction, localizedFaction
 
-	return AssistPromoter["Fraction"]
+	return Raid["Fraction"]
 end
 
 -- C_LFGList.CreateListing(16, "Фарм ХК", 0, "", "Join quick !", true)

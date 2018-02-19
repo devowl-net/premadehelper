@@ -37,7 +37,6 @@ do
 	end,
 	{
 		"SPELL_BUILDING_DAMAGE",
-		"CHAT_MSG_BG_SYSTEM_NEUTRAL",
 		"PLAYER_ENTERING_WORLD",
 		"UPDATE_BATTLEFIELD_SCORE"
 	})
@@ -150,8 +149,4 @@ function IoC:UPDATE_BATTLEFIELD_SCORE()
 	if isGoing ~= nil then
 		IoC.IsEnabled = not isGoing
 	end
-end
-
-function IoC:CHAT_MSG_BG_SYSTEM_NEUTRAL(message)
-	print("MESSAGE: "..message)
 end

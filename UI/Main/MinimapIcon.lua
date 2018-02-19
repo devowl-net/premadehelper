@@ -17,9 +17,6 @@ local PremadeLDB = LibStub("LibDataBroker-1.1"):NewDataObject("PHObject",
 	end,
 	OnTooltipShow = function(tooltip)
 		tooltip:AddLine("[PH] Premade Helper");
-		--Add text here. The first line is ALWAYS a "header" type.
-		--It will appear slightly larger than subsequent lines of text
-		--print("Show tooltip")
 	end,
 })
 
@@ -32,6 +29,7 @@ function addon:OnInitialize()
 			},
 		},
 	})
+
 	icon:Register("PHObject", PremadeLDB, self.db.profile.minimap)
 	--self:RegisterChatCommand("bunnies", "CommandTheBunnies")
 end
